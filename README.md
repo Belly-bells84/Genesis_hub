@@ -1,4 +1,4 @@
-# Projet-site-web-PWA-de-fin-d-ann-e
+# Nom de projet non-définitif : GENESIS
 Un site web est un réseau social privé à destination des partenaires de militaires (tout corps d'armes confondus). Il est encapsullé afin de pouvoir être une PWA (Progressive Web Application) afin que les utilisateurs puissent l'installer sur leurs smartphones malgré son indisponibilité sur les différents stores.
 
 
