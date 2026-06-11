@@ -25,8 +25,8 @@ Ce projet me tient profondément à cœur, car il allie mes compétences techniq
 LinkedIn : www.linkedin.com/in/belén-leger
 Email : lamaisondelaudace@gmail.com
 
-🎯Informations sur le projet 
-## Coleur Reference onboarding féminin
+## 🎯Informations sur le projet, presque toutes les informations sont ici 😉
+# Coleur Reference onboarding féminin
 
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
@@ -34,18 +34,18 @@ Email : lamaisondelaudace@gmail.com
 | Marron bordelais | ![#400D1F](https://dummyimage.com/10/400D1F/white?text=+) #400D1F |
 | Mauve | ![#D9BAD4](https://dummyimage.com/10/D9BAD4/white?text=+) #D9BAD4 |
 
-## Couleur Reference onboarding masculin
+# Couleur Reference onboarding masculin
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
 | Bleu grisâtre | ![#56688C](https://dummyimage.com/10/56688C/white?text=+) #56688C |
 | Bleu roi | ![#23518C](https://dummyimage.com/10/23518C/white?text=+) #23518C |
 
-## Couleur Reference neutre
+# Couleur Reference neutre
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
 | Pêche | ![#F9D59B](https://dummyimage.com/10/F9D59B/white?text=+) #F9D59B |
 
-## Couleur Reference universelle
+# Couleur Reference universelle
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
 | Vert alert | ![#CCEBCF](https://dummyimage.com/10/CCEBF/white?text=+) #CCEBCF  |
