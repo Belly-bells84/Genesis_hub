@@ -37,18 +37,18 @@ Email : lamaisondelaudace@gmail.com
 ## Couleur Reference onboarding masculin
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| Bleu grisâtre | ![#56688C](https://dummyimage.com/10/73345D/white?text=+) #56688C |
-| Bleu roi | ![#23518C](https://dummyimage.com/10/400D1F/white?text=+) #23518C |
+| Bleu grisâtre | ![#56688C](https://dummyimage.com/10/56688C/white?text=+) #56688C |
+| Bleu roi | ![#23518C](https://dummyimage.com/10/23518C/white?text=+) #23518C |
 
 ## Couleur Reference neutre
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| Pêche | ![#F9D59B](https://dummyimage.com/10/73345D/white?text=+) #F9D59B |
+| Pêche | ![#F9D59B](https://dummyimage.com/10/F9D59B/white?text=+) #F9D59B |
 
 ## Couleur Reference universelle
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| Vert alert | ![#CCEBCF](https://dummyimage.com/10/73345D/white?text=+) #CCEBCF  |
-| Blanc cassé | ![#F2F2F2](https://dummyimage.com/10/73345D/white?text=+) #F2F2F2 |
-| Marron glacé | ![#8C7558](https://dummyimage.com/10/73345D/white?text=+) #8C7558 |
-| Orange notification | ![#FF8D28](https://dummyimage.com/10/73345D/white?text=+) #FF8D28 |
+| Vert alert | ![#CCEBCF](https://dummyimage.com/10/CCEBF/white?text=+) #CCEBCF  |
+| Blanc cassé | ![#F2F2F2](https://dummyimage.com/10/F2F2F2/white?text=+) #F2F2F2 |
+| Marron glacé | ![#8C7558](https://dummyimage.com/10/8C7558/white?text=+) #8C7558 |
+| Orange notification | ![#FF8D28](https://dummyimage.com/10/FF8D28/white?text=+) #FF8D28 |
