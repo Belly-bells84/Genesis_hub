@@ -13,26 +13,25 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&display=swap" rel="stylesheet">
 <!--CSS-->
-    <link rel="stylesheet" href="asset/CSS/style.css" />
+    <link rel="stylesheet" href="/asset/CSS/style.css" />
   </head>
   <body>
     <header>
-            <a href="#" id="logo">
-            <img src="asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
+            <a href="/" id="logo">
+            <img src="/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
-            <a href="#">
+            <a href="/">
             <span id="genesis_name">Nom de code : GENESIS</span>
             <span class="genesis_devise">Les coeurs s'envolent,</span>
             <span class="genesis_devise">Genesis les rassemblent</span>
             </a>
         </div>
     <nav class="navigation_genesis">
-        <a href="#">S'inscrire</a>
-        <a href="#">Se connecter</a>
+        <a href="/inscription">S'inscrire</a>
+        <a href="/connexion">Se connecter</a>
     </nav>
     <div id="search" class="navigation_genesis">
         <a href="#"><img src="#" alt="Icone de loupe de recherche"></a>
     </div> 
     </header>
     <main>
-    </main>

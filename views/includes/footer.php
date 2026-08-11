@@ -1,8 +1,8 @@
-</body>
-<footer>
+</main>
+    <footer>
     <section>
         <a href="#">
-            <img src="./asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS">
+            <img src="/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS">
         </a>
     </section>
     <section>
@@ -27,4 +27,6 @@
         </a>
         </div>
     </section>
-</footer>
+    </footer>
+  </body>
+</html>
