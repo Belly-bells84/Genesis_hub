@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&display=swap" rel="stylesheet">
 <!--CSS-->
     <link rel="stylesheet" href="/asset/CSS/style.css" />
+    <script src="/views/js/global.js"defer></script>
   </head>
   <body>
     <header>

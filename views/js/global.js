@@ -1,0 +1,2 @@
+//Ce fichier JS est à placer dans le header du fichier header.php
+//Les autres ficjiers .js sont individuels à chaque page/view, ils devront soigneusement être inscrit dans chaque view. On évite les erreurs de nom !
