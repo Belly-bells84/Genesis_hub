@@ -28,5 +28,6 @@
         </div>
     </section>
     </footer>
+    <script src="/asset/JS/global.js"></script>
   </body>
 </html>

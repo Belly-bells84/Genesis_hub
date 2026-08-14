@@ -1,14 +1,18 @@
-<button type="button" class="fleche-suivant" aria-label="Etape suivante">➡️</button>
-<button type="button" class="fleche-precedente" aria-label="Etape précédente">⬅️</button><?php
+<?php
 require_once __DIR__ . '/../../config/connexion.php';
+require_once __DIR__ . '/../../config/csrf.php';
 $pdo = obtenir_connexion();
 
 $corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FROM corps_armee')->fetchAll();
 $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
 $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
 ?>
-<script src="/views/js/inscription.js"defer></script>
+
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
+
+    <!-- Jeton CSRF : invisible pour l'utilisatrice => nouvelle vérification dans le fichier : traiter_inscription.php -->
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
+
     <!-- ÉTAPE 1 : identifiants-->
     <fieldset class="etape" data-step="1">
         <legend>Créer mon compte</legend>
@@ -49,7 +53,7 @@ $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM si
             <?php endforeach; ?>
         </div>
 
-        <!-- Sous-corps : un bloc par corps_armee. Condition stricte : Affichage uniquement sélectionné -->
+        <!-- Sous-corps : un bloc par corps_armee, affiché uniquement si sélectionné (JS) -->
         <?php foreach ($corps_armee_liste as $corps): ?>
             <div class="toggle-groupe sous-corps" data-parent-corps="<?= htmlspecialchars($corps['id_corps_armee']) ?>" hidden>
                 <?php foreach ($sous_corps_liste as $sous): ?>
@@ -98,6 +102,7 @@ $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM si
         <button type="button" class="fleche-suivant" aria-label="Étape suivante">→</button>
     </fieldset>
 
+    
     <!-- ÉTAPE 3 : photo de profil-->
     <fieldset class="etape" data-step="3" hidden>
         <legend>Ajoute une photo de profil</legend>
@@ -110,3 +115,5 @@ $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM si
     </fieldset>
 
 </form>
+
+<script src="/asset/JS/inscription.js"></script>
