@@ -19,7 +19,7 @@
   <body>
     <header>
             <a href="/" id="logo">
-            <img src="/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
+            <img src="#" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
             <a href="/">
             <span id="genesis_name">Nom de code : GENESIS</span>
