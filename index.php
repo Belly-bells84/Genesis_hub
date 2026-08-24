@@ -7,6 +7,7 @@ session_start();
 
 require_once __DIR__ . '/config/connexion.php';
 require_once __DIR__ . '/config/csrf.php';
+require_once __DIR__ . '/config/auth.php';
 
 $page = $_GET['url'] ?? 'accueil';
 
@@ -26,6 +27,50 @@ if ($page === 'connexion/traiter') {
     exit;
 }
 
+if ($page === 'profil/traiter') {
+    include __DIR__ . '/controller/traiter_profil.php';
+    exit;
+}
+
+if ($page === 'profil/mot-de-passe/traiter') {
+    include __DIR__ . '/controller/traiter_mot_de_passe.php';
+    exit;
+}
+
+if ($page === 'deconnexion') {
+    $_SESSION = [];
+    session_destroy();
+    header('Location: /connexion');
+    exit;
+}
+
+// ============================================================
+// Contrôle d'accès en liste blanche : toute page absente de cette
+// liste exige une connexion. Une nouvelle page ajoutée plus tard
+// est donc protégée par défaut, sans avoir à y penser à chaque fois.
+// ============================================================
+$pages_publiques = ['accueil', 'inscription', 'connexion'];
+
+if (!in_array($page, $pages_publiques, true)) {
+    exiger_connexion();
+}
+
+// ============================================================
+// /profil          => son propre profil (édition)
+// /profil/{id}     => le profil d'une autre utilisatrice (lecture seule)
+// Les deux routes sont normalisées vers le même $page='profil' pour
+// que le switch les traite ensemble ; $id_profil_consulte distingue
+// les deux cas dans page_profil.php.
+// ============================================================
+$id_profil_consulte = null;
+
+if ($page === 'profil') {
+    $id_profil_consulte = (int) $_SESSION['user_id'];
+} elseif (preg_match('#^profil/(\d+)$#', $page, $matches)) {
+    $id_profil_consulte = (int) $matches[1];
+    $page = 'profil';
+}
+
 include __DIR__ . '/views/includes/header.php';
 
 switch ($page) {
@@ -39,6 +84,10 @@ switch ($page) {
 
     case 'connexion':
         include __DIR__ . '/views/pages/page_connexion.php';
+        break;
+
+    case 'profil':
+        include __DIR__ . '/views/pages/page_profil.php';
         break;
 
     default:

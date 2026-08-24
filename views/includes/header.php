@@ -14,12 +14,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&display=swap" rel="stylesheet">
 <!--CSS-->
     <link rel="stylesheet" href="/asset/CSS/style.css" />
-    <script src="/views/js/global.js"defer></script>
   </head>
   <body>
     <header>
             <a href="/" id="logo">
-            <img src="#" alt="Logo du réseau social GENESIS"></a>
+            <img src="/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
             <a href="/">
             <span id="genesis_name">Nom de code : GENESIS</span>
@@ -28,8 +27,12 @@
             </a>
         </div>
     <nav class="navigation_genesis">
-        <a href="/inscription">S'inscrire</a>
-        <a href="/connexion">Se connecter</a>
+        <?php if (utilisateur_connecte()): ?>
+            <a href="/deconnexion">Déconnexion</a>
+        <?php else: ?>
+            <a href="/inscription">S'inscrire</a>
+            <a href="/connexion">Se connecter</a>
+        <?php endif; ?>
     </nav>
     <div id="search" class="navigation_genesis">
         <a href="#"><img src="#" alt="Icone de loupe de recherche"></a>
