@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../config/connexion.php';
 require_once __DIR__ . '/../config/csrf.php';
 require_once __DIR__ . '/../models/class_publication.php';
+require_once __DIR__ . '/../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

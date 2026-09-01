@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/csrf.php';
 require_once __DIR__ . '/../config/upload.php';
 require_once __DIR__ . '/../models/class_user.php';
 require_once __DIR__ . '/../models/valid_ref_profil.php';
+require_once __DIR__ . '/../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
