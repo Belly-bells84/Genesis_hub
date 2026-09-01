@@ -7,7 +7,7 @@ $corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FRO
 $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
 $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
 ?>
-
+<script src="/asset/JS/inscription.js" defer></script>
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
 
     <!-- Jeton CSRF : invisible pour l'utilisatrice => nouvelle vérification dans le fichier : traiter_inscription.php -->
@@ -115,5 +115,3 @@ $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM si
     </fieldset>
 
 </form>
-
-<script src="/asset/JS/inscription.js"></script>

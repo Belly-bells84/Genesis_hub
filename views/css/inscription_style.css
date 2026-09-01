@@ -1,0 +1,138 @@
+/*
+  Compléments à style.css pour l'écran d'inscription.
+  Ce fichier n'écrase aucune règle existante : il ne couvre que
+  ce que style.css ne prévoit pas encore (pastilles d'étape,
+  regroupement label+champ+message, aperçu photo, focus clavier).
+  À fusionner dans style.css quand tu le juges utile.
+*/
+
+/* Le header a "position: relative" en dernier dans ton fichier :
+   on le fixe donc en haut du wizard plutôt qu'en position fixed. */
+body {
+  font-family: var(--typographie_poppins);
+  background-color: var(--couleur_universelle_secondary);
+}
+
+header #logo img {
+  padding: 10px;
+}
+
+header #genesis_name {
+  font-size: var(--taille_h1);
+  font-weight: 600;
+  margin: 0;
+}
+
+header .genesis_devise {
+  font-family: var(--typographie_cursive);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+header .navigation_genesis nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+header #search a svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+/* Pastilles d'avancement du wizard */
+.wizard-progression {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem auto 0;
+}
+
+.wizard-progression span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--couleur_féminin_tertiary);
+}
+
+.wizard-progression span.actif {
+  background-color: var(--couleur_féminin_primary);
+  width: 22px;
+  border-radius: 4px;
+}
+
+/* Regroupe une étiquette, son champ et son message d'aide/erreur */
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.champ input {
+  width: 100%;
+}
+
+.champ small {
+  font-size: 0.8rem;
+  color: var(--couleur_féminin_secondary);
+  opacity: 0.8;
+}
+
+/* Regroupe un intitulé de question au-dessus de son toggle-groupe */
+.question-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.question-toggle > span {
+  font-size: var(--taille_texte);
+  color: var(--couleur_féminin_secondary);
+}
+
+/* Aperçu de la photo de profil choisie */
+.apercu-photo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.apercu-photo img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--couleur_féminin_tertiary);
+  display: none;
+}
+
+.apercu-photo img.visible {
+  display: block;
+}
+
+/* États et accessibilité, non prévus dans style.css */
+.etape[hidden] {
+  display: none;
+}
+
+.etape input:focus-visible,
+.toggle input:focus-visible + * ,
+.fleche-suivant:focus-visible,
+.fleche-retour:focus-visible,
+.bouton-valider:focus-visible {
+  outline: 2px solid var(--couleur_féminin_primary);
+  outline-offset: 2px;
+}
+
+.wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 560px) {
+  .wizard-inscription {
+    margin: 1rem;
+  }
+}

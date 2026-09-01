@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8080:80"
+    volumes:
+      # Bind mount du code source : les modifications faites sur la machine
+      # hôte sont visibles immédiatement dans le conteneur, sans rebuild.
+      - ./:/var/www/html
+    environment:
+      # Grâce au correctif dans env_loader.php, ces variables passent
+      # AVANT le contenu de .env / .env.dev — pas besoin de dupliquer ou
+      # modifier ces fichiers pour l'usage conteneurisé.
+      APP_ENV: dev
+      DB_HOST: db
+      DB_NAME: genesis_dev
+      DB_USER: admin_dev
+      DB_PASSWORD: GenesisDev_hub
+    depends_on:
+      - db
+
+  db:
+    image: docker.io/library/mariadb:11
+    environment:
+      MYSQL_ROOT_PASSWORD: DevGenesis_hub
+      MYSQL_DATABASE: genesis_dev
+      MYSQL_USER: admin_dev
+      MYSQL_PASSWORD: GenesisDev_hub
+    volumes:
+      - genesis_db_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    ports:
+      # Exposé pour pouvoir se connecter avec un client MySQL/phpMyAdmin
+      # externe si besoin ; à retirer si vous voulez isoler la base.
+      - "3307:3306"
+
+  # Base de prod isolée : même principe que "db", mais pas reliée au
+  # service "app" pour l'instant (l'appli tourne en APP_ENV=dev). Utile
+  # pour consulter/tester les données de prod en local via un client
+  # MySQL sur le port 3308, sans risquer d'y connecter l'appli par erreur.
+  db-prod:
+    image: docker.io/library/mariadb:11
+    environment:
+      MYSQL_ROOT_PASSWORD: ProdGenesis_hub
+      MYSQL_DATABASE: genesis_prod
+      MYSQL_USER: genesis_prod
+      MYSQL_PASSWORD: GenesisProd_hub
+    volumes:
+      - genesis_db_data_prod:/var/lib/mysql
+      - ./init-db-prod:/docker-entrypoint-initdb.d
+    ports:
+      - "3308:3306"
+
+volumes:
+  genesis_db_data:
+  genesis_db_data_prod:

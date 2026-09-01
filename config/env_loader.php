@@ -3,6 +3,14 @@
 /**
  * Lit un fichier .env et charge chaque variable via putenv().
  * Ignore les lignes vides et les commentaires (#).
+ *
+ * Ne définit une variable que si elle n'est pas déjà présente dans
+ * l'environnement réel du processus (getenv() la trouve déjà) — ça
+ * permet à un conteneur (Podman/Docker) de fournir DB_HOST, DB_USER,
+ * etc. directement via son "environment:", sans que le fichier .env
+ * embarqué dans l'image ne les écrase. En local sous WAMP, où ces
+ * variables n'existent pas dans l'environnement du processus PHP,
+ * le comportement est inchangé : les valeurs viennent bien du fichier.
  */
 function charger_env(string $chemin_fichier): void
 {
@@ -34,6 +42,12 @@ function charger_env(string $chemin_fichier): void
 
         $cle    = trim($parts[0]);
         $valeur = trim($parts[1]);
+
+        // Priorité à une variable déjà définie dans l'environnement réel
+        // (ex: injectée par podman-compose) sur celle du fichier .env.
+        if (getenv($cle) !== false) {
+            continue;
+        }
 
         putenv("$cle=$valeur");
     }
