@@ -15,6 +15,10 @@ if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
 }
 
 $pdo = obtenir_connexion();
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    exit('Vous devez être connecté.');
+}
 $id_utilisateur = (int) $_SESSION['user_id'];
 
 $mot_de_passe_actuel = $_POST['mot_de_passe_actuel'] ?? '';

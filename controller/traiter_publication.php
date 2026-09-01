@@ -17,6 +17,10 @@ if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
 $pdo = obtenir_connexion();
 $publicationRepo = new Publication($pdo);
 
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    exit('Vous devez être connecté.');
+}
 $id_utilisateur = (int) $_SESSION['user_id'];
 $contenu_publication = trim($_POST['contenu_publication'] ?? '');
 

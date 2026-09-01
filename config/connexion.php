@@ -13,7 +13,7 @@ function obtenir_connexion(): PDO
     $host = getenv('DB_HOST');
     $nom_base = getenv('DB_NAME');
     $utilisateur = getenv('DB_USER');
-    $mot_de_passe = getenv('DB_PASS');
+    $mot_de_passe = getenv('DB_PASSWORD');
 
     $dsn = "mysql:host=$host;dbname=$nom_base;charset=utf8mb4";
 

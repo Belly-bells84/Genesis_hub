@@ -3,7 +3,9 @@
 require_once __DIR__ . '/../config/connexion.php';
 require_once __DIR__ . '/../config/chiffrement.php';
 require_once __DIR__ . '/../config/csrf.php';
+require_once __DIR__ . '/../config/upload.php';
 require_once __DIR__ . '/../models/class_user.php';
+require_once __DIR__ . '/../models/valid_ref_profil.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -12,8 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Vérification CSRF en tout premier : si le jeton ne correspond pas,
 // on arrête tout de suite, avant même de lire le reste du formulaire.
-// (session_start() a déjà été appelé dans index.php, donc $_SESSION
-// est disponible ici aussi, puisque ce fichier est inclus par index.php)
 if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
     http_response_code(403);
     exit('Requête invalide, merci de recharger la page et de réessayer.');
@@ -53,9 +53,20 @@ if ($password_user !== $password_confirmation) {
     $erreurs[] = 'Les mots de passe ne correspondent pas.';
 }
 
+// Point 3 : la majorité était calculée mais jamais vérifiée, ce qui
+// permettait à n'importe quel âge de s'inscrire. On borne aussi la
+// date basse (ex: 1900) pour écarter les dates farfelues.
 $date_naissance = DateTime::createFromFormat('Y-m-d', $date_birth_user);
-if (!$date_naissance || $date_naissance > new DateTime()) {
+$date_minimum = DateTime::createFromFormat('Y-m-d', '1900-01-01');
+
+if (!$date_naissance || $date_naissance > new DateTime() || $date_naissance < $date_minimum) {
     $erreurs[] = 'Date de naissance invalide.';
+    $est_majeur = 0;
+} else {
+    $est_majeur = (new DateTime())->diff($date_naissance)->y >= 18 ? 1 : 0;
+    if ($est_majeur === 0) {
+        $erreurs[] = 'L\'inscription est réservée aux personnes majeures.';
+    }
 }
 
 if ($celibat_geo === null || !in_array($celibat_geo, [0, 1], true)) {
@@ -64,49 +75,21 @@ if ($celibat_geo === null || !in_array($celibat_geo, [0, 1], true)) {
 
 // ============================================================
 // 2. Validation des références (corps d'armée, sous-corps, situation)
-//    On ne fait jamais confiance à un id envoyé par le navigateur :
-//    on vérifie qu'il existe réellement en base avant de l'utiliser.
+//    Factorisée dans models/valider_reference_profil.php (point 5)
 // ============================================================
-$stmt_corps = $pdo->prepare('SELECT sous_corps_obligatoire FROM corps_armee WHERE id_corps_armee = ?');
-$stmt_corps->execute([$id_corps_armee]);
-$corps = $stmt_corps->fetch();
-
-if (!$corps) {
-    $erreurs[] = 'Corps d\'armée invalide.';
-} else {
-    if ((int) $corps['sous_corps_obligatoire'] === 1 && $id_sous_corps_armee === null) {
-        $erreurs[] = 'Merci de préciser le sous-corps.';
-    }
-
-    if ($id_sous_corps_armee !== null) {
-        $stmt_sous = $pdo->prepare('SELECT 1 FROM sous_corps_armee WHERE id_sous_corps_armee = ? AND id_corps_armee = ?');
-        $stmt_sous->execute([$id_sous_corps_armee, $id_corps_armee]);
-        if (!$stmt_sous->fetch()) {
-            $erreurs[] = 'Sous-corps invalide pour ce corps d\'armée.';
-        }
-    }
-}
-
-$stmt_situation = $pdo->prepare('SELECT 1 FROM situation_relationship WHERE id_situation = ?');
-$stmt_situation->execute([$id_situation]);
-if (!$stmt_situation->fetch()) {
-    $erreurs[] = 'Situation relationnelle invalide.';
-}
+valid_ref_profil($pdo, $id_corps_armee, $id_sous_corps_armee, $id_situation, $erreurs);
 
 // ============================================================
-// 3. Vérification d'unicité de l'email
+// 3. Arrêt si erreurs de validation détectées jusqu'ici
 // ============================================================
-if (empty($erreurs)) {
-    $stmt_email = $pdo->prepare('SELECT 1 FROM account_user WHERE email_user = ?');
-    $stmt_email->execute([$email_user]);
-    if ($stmt_email->fetch()) {
-        $erreurs[] = 'Un compte existe déjà avec cet email.';
-    }
-}
-
-// ============================================================
-// 4. Arrêt si erreurs de validation
-// ============================================================
+// Remarque sur l'unicité de l'email (point 2) : on a RETIRÉ la
+// vérification "SELECT ... WHERE email_user = ?" faite ici avant
+// l'INSERT. Ce n'était pas suffisant : deux inscriptions envoyées en
+// même temps avec le même email pouvaient toutes les deux passer ce
+// SELECT avant qu'aucune n'ait encore fait l'INSERT (race condition).
+// La vraie garantie doit venir d'une contrainte UNIQUE en base sur
+// email_user (voir migration SQL fournie), et c'est l'INSERT
+// lui-même, plus bas, qui échouera proprement si l'email existe déjà.
 if (!empty($erreurs)) {
     http_response_code(422);
     foreach ($erreurs as $erreur) {
@@ -116,49 +99,28 @@ if (!empty($erreurs)) {
 }
 
 // ============================================================
-// 5. Photo de profil (facultative)
+// 4. Photo de profil (facultative) — point 1 : upload sécurisé
 // ============================================================
-$chemin_photo = null;
-
-if (!empty($_FILES['pictures_user']['name'])) {
-    $extensions_autorisees = ['jpg', 'jpeg', 'png', 'webp'];
-    $extension = strtolower(pathinfo($_FILES['pictures_user']['name'], PATHINFO_EXTENSION));
-
-    if (!in_array($extension, $extensions_autorisees, true)) {
-        http_response_code(422);
-        exit('Format de photo non autorisé.');
-    }
-
-    if ($_FILES['pictures_user']['size'] > 5 * 1024 * 1024) { // 5 Mo max
-        http_response_code(422);
-        exit('Photo trop volumineuse (5 Mo maximum).');
-    }
-
-    // Nom de fichier généré aléatoirement : on ne fait jamais confiance
-    // au nom de fichier envoyé par le navigateur
-    $nom_fichier = bin2hex(random_bytes(16)) . '.' . $extension;
-    $chemin_destination = __DIR__ . '/../asset/IMG/uploads/' . $nom_fichier;
-
-    if (!move_uploaded_file($_FILES['pictures_user']['tmp_name'], $chemin_destination)) {
-        http_response_code(500);
-        exit('Échec de l\'envoi de la photo.');
-    }
-
-    $chemin_photo = '/asset/IMG/uploads/' . $nom_fichier;
+try {
+    $chemin_photo = traiter_upload_photo(
+        $_FILES['pictures_user'] ?? [],
+        __DIR__ . '/../asset/IMG/uploads'
+    );
+} catch (UploadException $e) {
+    http_response_code(422);
+    exit(htmlspecialchars($e->getMessage()));
 }
 
 // ============================================================
-// 6. Hash du mot de passe, chiffrement des données sensibles
+// 5. Hash du mot de passe, chiffrement des données sensibles
 // ============================================================
 $password_hash = password_hash($password_user, PASSWORD_BCRYPT);
 $phone_chiffre = $phone_user !== '' ? chiffrer($phone_user) : null;
 $city_chiffree = $city_user !== '' ? chiffrer($city_user) : null;
 $date_birth_chiffree = chiffrer($date_birth_user);
 
-$est_majeur = (new DateTime())->diff($date_naissance)->y >= 18 ? 1 : 0;
-
 // ============================================================
-// 7. Insertion en base
+// 6. Insertion en base
 // ============================================================
 try {
     $stmt = $pdo->prepare('
@@ -193,6 +155,14 @@ try {
         'id_situation' => $id_situation,
     ]);
 } catch (PDOException $e) {
+    // Code MySQL 1062 = violation de contrainte UNIQUE (email déjà pris).
+    // C'est ce filet de sécurité en base, et non plus le SELECT préalable,
+    // qui garantit vraiment l'unicité même en cas de requêtes simultanées.
+    if ((int) $e->errorInfo[1] === 1062) {
+        http_response_code(422);
+        exit('<p>Un compte existe déjà avec cet email.</p>');
+    }
+
     error_log('Erreur inscription : ' . $e->getMessage());
     http_response_code(500);
     exit('Une erreur est survenue, merci de réessayer.');

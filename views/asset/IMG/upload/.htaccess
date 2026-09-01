@@ -1,0 +1,29 @@
+# Défense en profondeur : même si un fichier malveillant se retrouvait
+# dans ce dossier (extension falsifiée, bug futur, etc.), il ne pourrait
+# jamais être exécuté comme script par le serveur.
+
+# Apache 2.4+
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(php|php\d?|phtml|pht|phar|cgi|pl|py|sh)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+# Apache 2.2 (fallback)
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.(php|php\d?|phtml|pht|phar|cgi|pl|py|sh)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Désactive aussi l'exécution PHP via le handler, en plus du blocage ci-dessus
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>

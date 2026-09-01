@@ -3,7 +3,9 @@
 require_once __DIR__ . '/../config/connexion.php';
 require_once __DIR__ . '/../config/chiffrement.php';
 require_once __DIR__ . '/../config/csrf.php';
+require_once __DIR__ . '/../config/upload.php';
 require_once __DIR__ . '/../models/class_user.php';
+require_once __DIR__ . '/../models/valid_ref_profil.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -16,6 +18,11 @@ if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
 }
 
 $pdo = obtenir_connexion();
+
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    exit('Vous devez être connecté.');
+}
 $id_utilisateur = (int) $_SESSION['user_id'];
 $erreurs = [];
 
@@ -38,33 +45,10 @@ if ($celibat_geo === null || !in_array($celibat_geo, [0, 1], true)) {
     $erreurs[] = 'Merci de préciser votre situation géographique.';
 }
 
-// Même validation des références qu'à l'inscription : on ne fait
-// jamais confiance à un id envoyé par le navigateur.
-$stmt_corps = $pdo->prepare('SELECT sous_corps_obligatoire FROM corps_armee WHERE id_corps_armee = ?');
-$stmt_corps->execute([$id_corps_armee]);
-$corps = $stmt_corps->fetch();
-
-if (!$corps) {
-    $erreurs[] = 'Corps d\'armée invalide.';
-} else {
-    if ((int) $corps['sous_corps_obligatoire'] === 1 && $id_sous_corps_armee === null) {
-        $erreurs[] = 'Merci de préciser le sous-corps.';
-    }
-
-    if ($id_sous_corps_armee !== null) {
-        $stmt_sous = $pdo->prepare('SELECT 1 FROM sous_corps_armee WHERE id_sous_corps_armee = ? AND id_corps_armee = ?');
-        $stmt_sous->execute([$id_sous_corps_armee, $id_corps_armee]);
-        if (!$stmt_sous->fetch()) {
-            $erreurs[] = 'Sous-corps invalide pour ce corps d\'armée.';
-        }
-    }
-}
-
-$stmt_situation = $pdo->prepare('SELECT 1 FROM situation_relationship WHERE id_situation = ?');
-$stmt_situation->execute([$id_situation]);
-if (!$stmt_situation->fetch()) {
-    $erreurs[] = 'Situation relationnelle invalide.';
-}
+// Point 5 : même validation qu'à l'inscription, désormais factorisée
+// dans models/valider_reference_profil.php pour ne plus avoir deux
+// copies de cette logique à maintenir en parallèle.
+valid_ref_profil($pdo, $id_corps_armee, $id_sous_corps_armee, $id_situation, $erreurs);
 
 if (!empty($erreurs)) {
     http_response_code(422);
@@ -74,32 +58,15 @@ if (!empty($erreurs)) {
     exit;
 }
 
-// Photo (facultative, ne remplace l'ancienne que si une nouvelle est envoyée)
-$chemin_photo = null;
-
-if (!empty($_FILES['pictures_user']['name'])) {
-    $extensions_autorisees = ['jpg', 'jpeg', 'png', 'webp'];
-    $extension = strtolower(pathinfo($_FILES['pictures_user']['name'], PATHINFO_EXTENSION));
-
-    if (!in_array($extension, $extensions_autorisees, true)) {
-        http_response_code(422);
-        exit('Format de photo non autorisé.');
-    }
-
-    if ($_FILES['pictures_user']['size'] > 5 * 1024 * 1024) {
-        http_response_code(422);
-        exit('Photo trop volumineuse (5 Mo maximum).');
-    }
-
-    $nom_fichier = bin2hex(random_bytes(16)) . '.' . $extension;
-    $chemin_destination = __DIR__ . '/../asset/IMG/uploads/' . $nom_fichier;
-
-    if (!move_uploaded_file($_FILES['pictures_user']['tmp_name'], $chemin_destination)) {
-        http_response_code(500);
-        exit('Échec de l\'envoi de la photo.');
-    }
-
-    $chemin_photo = '/asset/IMG/uploads/' . $nom_fichier;
+// Point 1 : upload sécurisé (vérifie le vrai contenu, ré-encode l'image)
+try {
+    $chemin_photo = traiter_upload_photo(
+        $_FILES['pictures_user'] ?? [],
+        __DIR__ . '/../asset/IMG/uploads'
+    );
+} catch (UploadException $e) {
+    http_response_code(422);
+    exit(htmlspecialchars($e->getMessage()));
 }
 
 $phone_chiffre = $phone_user !== '' ? chiffrer($phone_user) : null;
