@@ -23,6 +23,8 @@ class Publication
                 p.id_publication,
                 p.date_creation_publication,
                 p.contenu_publication,
+                p.chemin_media,
+                p.type_media,
                 au.account_name,
                 (SELECT COUNT(*) FROM aimer_publication ap WHERE ap.id_publication = p.id_publication) AS nb_likes,
                 EXISTS(
@@ -34,7 +36,7 @@ class Publication
             INNER JOIN rediger_publication rp ON p.id_publication = rp.id_publication
             INNER JOIN account_user au ON au.id = rp.id_user
             ORDER BY p.date_creation_publication DESC
-        ');
+            ');
         $stmt->execute(['id_utilisateur' => $id_utilisateur]);
 
         return $stmt->fetchAll();
@@ -73,13 +75,23 @@ class Publication
     /**
      * Crée une publication + son lien vers l'auteure, en transaction.
      */
-    public function creer(int $id_utilisateur, string $contenu_publication): void
-    {
-        $this->pdo->beginTransaction();
+    /**
+ * Crée une publication + son lien vers l'auteure, en transaction.
+ * $chemin_media et $type_media sont optionnels (null si publication texte seul).
+ */
+    public function creer(
+        int $id_utilisateur,
+        string $contenu_publication,
+        ?string $chemin_media = null,
+        ?string $type_media = null
+        ): void {
+            $this->pdo->beginTransaction();
 
         try {
-            $stmt = $this->pdo->prepare('INSERT INTO publication (contenu_publication) VALUES (?)');
-            $stmt->execute([$contenu_publication]);
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO publication (contenu_publication, chemin_media, type_media) VALUES (?, ?, ?)'
+            );
+            $stmt->execute([$contenu_publication, $chemin_media, $type_media]);
             $id_publication = (int) $this->pdo->lastInsertId();
 
             $stmt_lien = $this->pdo->prepare('INSERT INTO rediger_publication (id_user, id_publication) VALUES (?, ?)');

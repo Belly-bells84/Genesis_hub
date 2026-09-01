@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/connexion.php';
 require_once __DIR__ . '/../../config/csrf.php';
-require_once __DIR__ . '/../../controller/class_publication.php';
+require_once __DIR__ . '/../../models/class_publication.php';
 
 $pdo = obtenir_connexion();
 $publicationRepo = new Publication($pdo);
@@ -13,9 +13,7 @@ $ids_publications = array_column($publications, 'id_publication');
 $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publications($ids_publications);
 ?>
 
-<!-- ============================================================ -->
 <!-- Formulaire de publication                                     -->
-<!-- ============================================================ -->
 <form class="wizard-inscription" action="/feed/publier" method="POST">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
     <fieldset class="etape">

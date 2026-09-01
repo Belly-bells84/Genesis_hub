@@ -38,6 +38,7 @@ a {
 img {
   width: 100%;
 }
+
 /*Style du header*/
 header {
   display: flex;
@@ -272,4 +273,8 @@ main {
   color: #1a7a3a;
   font-size: var(--taille_texte);
   font-family: var(--typographie_poppins);
+}
+
+.valeur {
+  width: 25%;
 }

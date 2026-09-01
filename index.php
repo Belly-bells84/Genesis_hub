@@ -107,34 +107,21 @@ try {
         $id_profil_consulte = (int) $matches[1];
         $page = 'profil';
     }
+//Pourquoi le tableau ? Pour la maintenanbilité, la factorisation et la lisibilité du code.
+    $routes = [
+        'accueil'     => __DIR__ . '/views/pages/welcome.php',
+        'inscription' => __DIR__ . '/views/pages/page_inscription.php',
+        'connexion'   => __DIR__ . '/views/pages/page_connexion.php',
+        'profil'      => __DIR__ . '/views/pages/page_profil.php',
+        'feed'        => __DIR__ . '/views/pages/page_feed.php',
+    ];
 
-    inclure_vue($page, __DIR__ . '/views/includes/header.php');
-
-    switch ($page) {
-        case 'accueil':
-            inclure_vue($page, __DIR__ . '/views/pages/welcome.php');
-            break;
-
-        case 'inscription':
-            inclure_vue($page, __DIR__ . '/views/pages/page_inscription.php');
-            break;
-
-        case 'connexion':
-            inclure_vue($page, __DIR__ . '/views/pages/page_connexion.php');
-            break;
-
-        case 'profil':
-            inclure_vue($page, __DIR__ . '/views/pages/page_profil.php');
-            break;
-
-        case 'feed':
-            inclure_vue($page, __DIR__ . '/views/pages/page_feed.php');
-            break;
-
-        default:
-            throw new PageIntrouvableException($page);
+    if (!isset($routes[$page])) {
+        throw new PageIntrouvableException($page);
     }
 
+    inclure_vue($page, __DIR__ . '/views/includes/header.php');
+    inclure_vue($page, $routes[$page]);
     inclure_vue($page, __DIR__ . '/views/includes/footer.php');
 
 } catch (PageIntrouvableException $e) {

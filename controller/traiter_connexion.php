@@ -119,7 +119,7 @@ session_regenerate_id(true);
 
 $_SESSION['user_id'] = $compte['id'];
 
-header('Location: /');
+header('Location: /page_feed.php');
 exit;
 
 /**

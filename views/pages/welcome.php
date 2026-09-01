@@ -13,19 +13,13 @@
     <div id="contenu_valeur">
         <h2>Ici, nous sommes transparent. Je vous présente nos valeurs !</h2>
         <div>
-            <a href="#">
-                <img src="/asset/IMG/Design_valeur_1.png" alt="Première valeur : Liberté">
-            </a>
+                <img src="/views/asset/IMG/liberty.ico" alt="Première valeur : Liberté" class="valeur">
         </div>
         <div>
-            <a href="#">
-                <img src="/asset/IMG/Design_valeur_2.png" alt="Deuxiéme valeur : l'Audace">
-            </a>
+                <img src="/views/asset/IMG/audacity.ico" alt="Deuxiéme valeur : l'Audace" class="valeur">
         </div>
         <div>
-            <a href="#">
-                <img src="/asset/IMG/Design_valeur_3.png" alt="Troisiéme valeur : la Loyauté">
-            </a>
+                <img src="/views/asset/IMG/loyauty.ico" alt="Troisiéme valeur : la Loyauté" class="valeur">
         </div>
     </div>
 </section>
