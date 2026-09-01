@@ -33,7 +33,7 @@ if ($page === 'profil/traiter') {
 }
 
 if ($page === 'profil/mot-de-passe/traiter') {
-    include __DIR__ . '/controller/traiter_mot_de_passe.php';
+    include __DIR__ . '/controller/traiter_mdp.php';
     exit;
 }
 
@@ -44,24 +44,17 @@ if ($page === 'deconnexion') {
     exit;
 }
 
-// ============================================================
-// Contrôle d'accès en liste blanche : toute page absente de cette
-// liste exige une connexion. Une nouvelle page ajoutée plus tard
-// est donc protégée par défaut, sans avoir à y penser à chaque fois.
-// ============================================================
+// Contrôle d'accès en liste blanche : toute page absente de cette liste exige une connexion. Une nouvelle page ajoutée = protégée par défaut.
 $pages_publiques = ['accueil', 'inscription', 'connexion'];
 
 if (!in_array($page, $pages_publiques, true)) {
     exiger_connexion();
 }
 
-// ============================================================
 // /profil          => son propre profil (édition)
-// /profil/{id}     => le profil d'une autre utilisatrice (lecture seule)
-// Les deux routes sont normalisées vers le même $page='profil' pour
-// que le switch les traite ensemble ; $id_profil_consulte distingue
-// les deux cas dans page_profil.php.
-// ============================================================
+// /profil/{id}     => le profil d'une autre utilisatrice (lecture seule) les deux routes sont normalisées vers le même $page='profil' pour que le switch les traite ensemble ; 
+// $id_profil_consulte distingue les deux cas dans page_profil.php.
+
 $id_profil_consulte = null;
 
 if ($page === 'profil') {
