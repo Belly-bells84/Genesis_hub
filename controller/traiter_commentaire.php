@@ -5,44 +5,53 @@ require_once __DIR__ . '/../config/csrf.php';
 require_once __DIR__ . '/../models/class_publication.php';
 require_once __DIR__ . '/../config/config.php';
 
+header('Content-Type: application/json');
+
+/**
+ * Envoie une réponse JSON d'erreur avec le bon code HTTP, et arrête le script.
+ */
+function repondre_erreur(int $code, string $message): never
+{
+    http_response_code($code);
+    echo json_encode(['erreur' => $message]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    exit('Méthode non autorisée.');
+    repondre_erreur(405, 'Méthode non autorisée.');
 }
 
 if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
-    http_response_code(403);
-    exit('Requête invalide, merci de recharger la page et de réessayer.');
+    repondre_erreur(403, 'Requête invalide, merci de recharger la page et de réessayer.');
+}
+
+if (!isset($_SESSION['user_id'])) {
+    repondre_erreur(401, 'Vous devez être connecté.');
 }
 
 $pdo = obtenir_connexion();
 $publicationRepo = new Publication($pdo);
 
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    exit('Vous devez être connecté.');
-}
 $id_utilisateur = (int) $_SESSION['user_id'];
 $id_publication = filter_input(INPUT_POST, 'id_publication', FILTER_VALIDATE_INT);
 $contenu_commentaire = trim($_POST['contenu_commentaire'] ?? '');
 
 if (!$id_publication || $contenu_commentaire === '' || mb_strlen($contenu_commentaire) > 1500) {
-    http_response_code(422);
-    exit('Commentaire invalide.');
+    repondre_erreur(422, 'Commentaire invalide.');
 }
 
 if (!$publicationRepo->existe($id_publication)) {
-    http_response_code(404);
-    exit('Publication introuvable.');
+    repondre_erreur(404, 'Publication introuvable.');
 }
 
 try {
-    $publicationRepo->creerCommentaire($id_utilisateur, $id_publication, $contenu_commentaire);
+    $id_commentaire = $publicationRepo->creerCommentaire($id_utilisateur, $id_publication, $contenu_commentaire);
 } catch (PDOException $e) {
     error_log('Erreur création commentaire : ' . $e->getMessage());
-    http_response_code(500);
-    exit('Une erreur est survenue, merci de réessayer.');
+    repondre_erreur(500, 'Une erreur est survenue, merci de réessayer.');
 }
 
-header('Location: /feed');
+$commentaire = $publicationRepo->recupCommentaire($id_commentaire);
+
+echo json_encode($commentaire);
 exit;

@@ -13,12 +13,16 @@ $ids_publications = array_column($publications, 'id_publication');
 $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publications($ids_publications);
 ?>
 
+<!-- ============================================================ -->
 <!-- Formulaire de publication                                     -->
-<form class="wizard-inscription" action="/feed/publier" method="POST">
+<!-- ============================================================ -->
+<script src="/views/js/feed.js" defer></script>
+<form class="wizard-inscription" action="/feed/publier" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
     <fieldset class="etape">
         <legend>Publier</legend>
-        <textarea name="contenu_publication" maxlength="1500" required placeholder="Quoi de neuf ?"></textarea>
+        <textarea name="contenu_publication" maxlength="1500" placeholder="Quoi de neuf ?"></textarea>
+        <input type="file" name="media" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm">
         <button type="submit" class="bouton-valider">Publier</button>
     </fieldset>
 </form>
@@ -30,8 +34,30 @@ $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publica
     <?php foreach ($publications as $publication): ?>
         <article class="publication">
             <p class="publication-auteur"><?= htmlspecialchars($publication['account_name']) ?></p>
+
+            <?php if ((int) $publication['id_auteure'] === (int) $_SESSION['user_id']): ?>
+                <form action="/feed/supprimer" method="POST" class="form-supprimer">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
+                    <input type="hidden" name="id_publication" value="<?= (int) $publication['id_publication'] ?>">
+                    <button type="submit" class="bouton-supprimer">Supprimer</button>
+                </form>
+            <?php endif; ?>
+
             <p class="publication-date"><?= (new DateTime($publication['date_creation_publication']))->format('d/m/Y H:i') ?></p>
             <p class="publication-contenu"><?= nl2br(htmlspecialchars($publication['contenu_publication'])) ?></p>
+
+            <?php if (!empty($publication['chemin_media'])): ?>
+                <div class="publication-media">
+                    <?php if ($publication['type_media'] === 'image'): ?>
+                        <img src="<?= htmlspecialchars($publication['chemin_media']) ?>" alt="Média de la publication">
+                    <?php elseif ($publication['type_media'] === 'video'): ?>
+                        <video controls>
+                            <source src="<?= htmlspecialchars($publication['chemin_media']) ?>">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
 
             <form action="/feed/aimer" method="POST" class="form-like">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">

@@ -3,7 +3,6 @@
 require_once __DIR__ . '/../config/connexion.php';
 require_once __DIR__ . '/../config/csrf.php';
 require_once __DIR__ . '/../models/class_publication.php';
-require_once __DIR__ . '/../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -53,7 +52,7 @@ if ($a_un_fichier) {
         exit('Erreur lors de l\'envoi du fichier.');
     }
 
-    // Types autorisés : extension => [mime attendu, dossier, type_media, taille max en octets]
+    // Types autorisés : mime réel => [extension, taille max en octets]
     $types_autorises = [
         'image/jpeg' => ['jpg', 5 * 1024 * 1024],
         'image/png'  => ['png', 5 * 1024 * 1024],
@@ -65,12 +64,6 @@ if ($a_un_fichier) {
     // On vérifie le VRAI type du fichier (finfo lit les octets du fichier,
     // pas le nom ni le Content-Type envoyé par le navigateur, facilement falsifiables).
     $finfo = new finfo(FILEINFO_MIME_TYPE);
-    // Re-encoder l'image force la suppression de tout code caché
-    if ($type_media === 'image') {
-    $image = imagecreatefromstring(file_get_contents($chemin_destination));
-    imagejpeg($image, $chemin_destination, 85); // ou imagepng/imagewebp selon le format
-    imagedestroy($image);
-    }
     $mime_reel = $finfo->file($fichier['tmp_name']);
 
     if (!isset($types_autorises[$mime_reel])) {
@@ -96,8 +89,32 @@ if ($a_un_fichier) {
         exit('Une erreur est survenue lors de l\'enregistrement du fichier.');
     }
 
-    $chemin_media = '/uploads/media/' . $nom_fichier;
     $type_media = str_starts_with($mime_reel, 'image/') ? 'image' : 'video';
+
+    // Re-encoder l'image force la suppression de tout code caché dans le fichier.
+    // On le fait UNIQUEMENT après avoir déplacé le fichier avec succès.
+    if ($type_media === 'image') {
+        $image = match ($mime_reel) {
+            'image/jpeg' => imagecreatefromjpeg($chemin_destination),
+            'image/png'  => imagecreatefrompng($chemin_destination),
+            'image/webp' => imagecreatefromwebp($chemin_destination),
+        };
+
+        if ($image === false) {
+            @unlink($chemin_destination);
+            http_response_code(422);
+            exit('Le fichier image est corrompu ou invalide.');
+        }
+
+        match ($mime_reel) {
+            'image/jpeg' => imagejpeg($image, $chemin_destination, 85),
+            'image/png'  => imagepng($image, $chemin_destination),
+            'image/webp' => imagewebp($image, $chemin_destination, 85),
+        };
+        imagedestroy($image);
+    }
+
+    $chemin_media = '/uploads/media/' . $nom_fichier;
 }
 
 // ============================================================
@@ -106,10 +123,16 @@ if ($a_un_fichier) {
 try {
     $publicationRepo->creer($id_utilisateur, $contenu_publication, $chemin_media, $type_media);
 } catch (PDOException $e) {
+    // Si l'insertion échoue APRÈS avoir déplacé le fichier, on le supprime
+    // pour ne pas laisser de fichier orphelin sur le disque.
+    if ($chemin_media !== null) {
+        @unlink(__DIR__ . '/..' . $chemin_media);
+    }
+
     error_log('Erreur création publication : ' . $e->getMessage());
     http_response_code(500);
     exit('Une erreur est survenue, merci de réessayer.');
 }
 
-header('Location: /page_feed.php');
+header('Location: /feed');
 exit;

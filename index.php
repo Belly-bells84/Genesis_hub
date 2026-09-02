@@ -73,6 +73,11 @@ try {
         include __DIR__ . '/controller/traiter_commentaire.php';
         exit;
     }
+    
+    if ($page === 'feed/supprimer') {
+        include __DIR__ . '/controller/traiter_suppression_publication.php';
+        exit;
+    }
 
     if ($page === 'deconnexion') {
         $_SESSION = [];

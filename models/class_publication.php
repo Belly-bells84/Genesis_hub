@@ -25,6 +25,7 @@ class Publication
                 p.contenu_publication,
                 p.chemin_media,
                 p.type_media,
+                au.id AS id_auteure,
                 au.account_name,
                 (SELECT COUNT(*) FROM aimer_publication ap WHERE ap.id_publication = p.id_publication) AS nb_likes,
                 EXISTS(
@@ -74,18 +75,15 @@ class Publication
 
     /**
      * Crée une publication + son lien vers l'auteure, en transaction.
+     * $chemin_media et $type_media sont optionnels (null si publication texte seul).
      */
-    /**
- * Crée une publication + son lien vers l'auteure, en transaction.
- * $chemin_media et $type_media sont optionnels (null si publication texte seul).
- */
     public function creer(
         int $id_utilisateur,
         string $contenu_publication,
         ?string $chemin_media = null,
         ?string $type_media = null
-        ): void {
-            $this->pdo->beginTransaction();
+    ): void {
+        $this->pdo->beginTransaction();
 
         try {
             $stmt = $this->pdo->prepare(
@@ -106,19 +104,32 @@ class Publication
 
     /**
      * Bascule le like d'une publication (l'ajoute si absent, le retire si présent).
+     * Retourne le nouvel état pour permettre une mise à jour AJAX sans
+     * recharger la page : si la publication est maintenant aimée, et
+     * son nouveau nombre total de likes.
      */
-    public function basculerLike(int $id_utilisateur, int $id_publication): void
+    public function basculerLike(int $id_utilisateur, int $id_publication): array
     {
         $stmt = $this->pdo->prepare('SELECT 1 FROM aimer_publication WHERE id_user = ? AND id_publication = ?');
         $stmt->execute([$id_utilisateur, $id_publication]);
 
         if ($stmt->fetch()) {
             $stmt = $this->pdo->prepare('DELETE FROM aimer_publication WHERE id_user = ? AND id_publication = ?');
+            $stmt->execute([$id_utilisateur, $id_publication]);
+            $deja_aime = false;
         } else {
             $stmt = $this->pdo->prepare('INSERT INTO aimer_publication (id_user, id_publication) VALUES (?, ?)');
+            $stmt->execute([$id_utilisateur, $id_publication]);
+            $deja_aime = true;
         }
 
-        $stmt->execute([$id_utilisateur, $id_publication]);
+        $stmt_compte = $this->pdo->prepare('SELECT COUNT(*) FROM aimer_publication WHERE id_publication = ?');
+        $stmt_compte->execute([$id_publication]);
+
+        return [
+            'deja_aime' => $deja_aime,
+            'nb_likes' => (int) $stmt_compte->fetchColumn(),
+        ];
     }
 
     public function existe(int $id_publication): bool
@@ -131,8 +142,10 @@ class Publication
 
     /**
      * Crée un commentaire + son lien vers l'auteure et vers sa publication, en transaction.
+     * Retourne l'id du commentaire créé, pour pouvoir ensuite le relire
+     * en entier (avec le nom de l'auteure) et le renvoyer en JSON au JS.
      */
-    public function creerCommentaire(int $id_utilisateur, int $id_publication, string $contenu_commentaire): void
+    public function creerCommentaire(int $id_utilisateur, int $id_publication, string $contenu_commentaire): int
     {
         $this->pdo->beginTransaction();
 
@@ -145,9 +158,86 @@ class Publication
             $stmt_lien->execute([$id_utilisateur, $id_commentaire]);
 
             $this->pdo->commit();
+
+            return $id_commentaire;
         } catch (PDOException $e) {
             $this->pdo->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Récupère un commentaire précis avec le nom de son auteure, pour
+     * l'afficher côté client juste après sa création (réponse AJAX).
+     */
+    public function recupCommentaire(int $id_commentaire): ?array
+    {
+        $stmt = $this->pdo->prepare('
+            SELECT c.id_commentaire, c.contenu_commentaire, c.date_creation_commentaire, au.account_name
+            FROM commentaire c
+            INNER JOIN rediger_commentaire rc ON rc.id_commentaire = c.id_commentaire
+            INNER JOIN account_user au ON au.id = rc.id_user
+            WHERE c.id_commentaire = ?
+        ');
+        $stmt->execute([$id_commentaire]);
+        $resultat = $stmt->fetch();
+
+        return $resultat !== false ? $resultat : null;
+    }
+
+    /**
+     * Compte le nombre de publications faites par l'utilisatrice dans la
+     * dernière heure, pour limiter le spam.
+     */
+    public function compterPublicationsRecentes(int $id_utilisateur): int
+    {
+        $stmt = $this->pdo->prepare('
+            SELECT COUNT(*)
+            FROM publication p
+            INNER JOIN rediger_publication rp ON rp.id_publication = p.id_publication
+            WHERE rp.id_user = :id_utilisateur
+            AND p.date_creation_publication > (NOW() - INTERVAL 1 HOUR)
+        ');
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Récupère le chemin du média d'une publication (utile avant suppression,
+     * pour savoir quel fichier effacer du disque).
+     */
+    public function recupCheminMedia(int $id_publication): ?string
+    {
+        $stmt = $this->pdo->prepare('SELECT chemin_media FROM publication WHERE id_publication = ?');
+        $stmt->execute([$id_publication]);
+        $resultat = $stmt->fetchColumn();
+
+        return $resultat !== false ? $resultat : null;
+    }
+
+    /**
+     * Vérifie que $id_utilisateur est bien l'auteure de $id_publication,
+     * avant d'autoriser une action sensible (suppression, modification...).
+     */
+    public function estAuteure(int $id_utilisateur, int $id_publication): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT 1 FROM rediger_publication WHERE id_user = ? AND id_publication = ?'
+        );
+        $stmt->execute([$id_utilisateur, $id_publication]);
+
+        return (bool) $stmt->fetch();
+    }
+
+    /**
+     * Supprime une publication (les commentaires et likes liés partent avec,
+     * si vos clés étrangères sont en ON DELETE CASCADE — sinon il faut les
+     * supprimer manuellement avant).
+     */
+    public function supprimer(int $id_publication): void
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM publication WHERE id_publication = ?');
+        $stmt->execute([$id_publication]);
     }
 }

@@ -6,7 +6,6 @@ require_once __DIR__ . '/../config/csrf.php';
 require_once __DIR__ . '/../config/upload.php';
 require_once __DIR__ . '/../models/class_user.php';
 require_once __DIR__ . '/../models/valid_ref_profil.php';
-require_once __DIR__ . '/../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -21,6 +20,7 @@ if (!verifier_jeton_csrf($_POST['csrf_token'] ?? null)) {
 }
 
 $pdo = obtenir_connexion();
+$userRepo = new User($pdo);
 $erreurs = [];
 
 // ============================================================
@@ -124,21 +124,7 @@ $date_birth_chiffree = chiffrer($date_birth_user);
 // 6. Insertion en base
 // ============================================================
 try {
-    $stmt = $pdo->prepare('
-        INSERT INTO account_user (
-            pictures_user, account_name, email_user, password_user,
-            date_birth_user, phone_user, city_user, celibat_geo,
-            est_majeur, account_valid, reg_visible, theme,
-            id_corps_armee, id_sous_corps_armee, id_situation
-        ) VALUES (
-            :pictures_user, :account_name, :email_user, :password_user,
-            :date_birth_user, :phone_user, :city_user, :celibat_geo,
-            :est_majeur, :account_valid, :reg_visible, :theme,
-            :id_corps_armee, :id_sous_corps_armee, :id_situation
-        )
-    ');
-
-    $stmt->execute([
+    $userRepo->creer([
         'pictures_user' => $chemin_photo,
         'account_name' => $account_name,
         'email_user' => $email_user,
@@ -157,7 +143,7 @@ try {
     ]);
 } catch (PDOException $e) {
     // Code MySQL 1062 = violation de contrainte UNIQUE (email déjà pris).
-    // C'est ce filet de sécurité en base, et non plus le SELECT préalable,
+    // C'est ce filet de sécurité en base, et non un SELECT préalable,
     // qui garantit vraiment l'unicité même en cas de requêtes simultanées.
     if ((int) $e->errorInfo[1] === 1062) {
         http_response_code(422);
