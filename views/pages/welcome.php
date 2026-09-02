@@ -1,3 +1,4 @@
+<link rel="style_welcome" href="/views/css/welcome_style.css" />
 <!--Section 1 : Lettre ouverte de la fondatrice-->
 <section id="section_1">
     <article id="presentation_fondatrice">
@@ -33,22 +34,22 @@
     <div>
         <div>
             <a href="#">
-                <img src="#" alt="Description de l'image de l'article">
-                <h3>Titre de l'article_1</h3>
+                <img src="/views/asset/IMG/best_coffee.jpg" alt="Illustration d'une tasse de café recevant du lait">
+                <h3>Quelle est la meilleure recete de café latté de la saison ?</h3>
             </a>
         </div>
 
         <div>
             <a href="#">
-                <img src="#" alt="Description de l'image de l'article">
-                <h3>Titre de l'article_2</h3>
+                <img src="/views/asset/IMG/drink_with_friend.jpg" alt="Un verre à martini">
+                <h3>Pour toi, pour un verre entre copien, quel est ton meilleur cocktail ?</h3>
             </a>
         </div>
 
         <div>
             <a href="#">
-                <img src="#" alt="Description de l'image de l'article">
-                <h3>Titre de l'article_3</h3>
+                <img src="/views/asset/IMG/boat_on_wall.jpg" alt="Un bateau sur un mur">
+                <h3>Un nouveau point de vue</h3>
             </a>
         </div>
     </div>

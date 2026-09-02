@@ -6,11 +6,12 @@ $pdo = obtenir_connexion();
 $corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FROM corps_armee')->fetchAll();
 $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
 $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
+$sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situation, id_situation FROM sous_situation')->fetchAll();
 ?>
 <script src="/asset/JS/inscription.js" defer></script>
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
 
-    <!-- Jeton CSRF : invisible pour l'utilisatrice => nouvelle vérification dans le fichier : traiter_inscription.php -->
+    <!-- Jeton CSRF : invisible pour l'utilisatrice, revérifié dans traiter_inscription.php -->
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
     <!-- ÉTAPE 1 : identifiants-->
@@ -87,22 +88,29 @@ $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM si
             <?php endforeach; ?>
         </div>
 
-        <div class="toggle-groupe">
-            <label class="toggle">
-                <input type="radio" name="celibat_geo" value="1" required>
-                Célibat géographique
-            </label>
-            <label class="toggle">
-                <input type="radio" name="celibat_geo" value="0" required>
-                Vie commune
-            </label>
-        </div>
+        <!-- Sous-situation : un bloc par situation, affiché uniquement si sélectionnée (JS) -->
+        <?php foreach ($situation_liste as $situation): ?>
+            <div class="toggle-groupe sous-situation" data-parent-situation="<?= htmlspecialchars($situation['id_situation']) ?>" hidden>
+                <?php foreach ($sous_situation_liste as $sous_sit): ?>
+                    <?php if ($sous_sit['id_situation'] == $situation['id_situation']): ?>
+                        <label class="toggle">
+                            <input
+                                type="radio"
+                                name="id_sous_situation"
+                                value="<?= htmlspecialchars($sous_sit['id_sous_situation']) ?>"
+                            >
+                            <?= htmlspecialchars($sous_sit['libelle_sous_situation']) ?>
+                        </label>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endforeach; ?>
 
         <button type="button" class="fleche-retour" aria-label="Étape précédente">←</button>
         <button type="button" class="fleche-suivant" aria-label="Étape suivante">→</button>
     </fieldset>
 
-    
+
     <!-- ÉTAPE 3 : photo de profil-->
     <fieldset class="etape" data-step="3" hidden>
         <legend>Ajoute une photo de profil</legend>

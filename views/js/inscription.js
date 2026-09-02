@@ -28,24 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Affiche uniquement le bloc de sous-corps correspondant au corps_armee coché
-    const radiosCorpsArmee = document.querySelectorAll('input[name="id_corps_armee"]');
-    const groupesSousCorps = document.querySelectorAll('.sous-corps');
+    // Fonction générique : affiche uniquement le sous-groupe correspondant
+    // à la valeur cochée dans un groupe de radios parent (réutilisée pour
+    // corps_armee -> sous-corps ET situation -> sous-situation).
+    function activerRevelationConditionnelle(nomChampParent, classeGroupeEnfant, attributParent) {
+        const radiosParent = document.querySelectorAll(`input[name="${nomChampParent}"]`);
+        const groupesEnfants = document.querySelectorAll(`.${classeGroupeEnfant}`);
 
-    radiosCorpsArmee.forEach((radio) => {
-        radio.addEventListener('change', () => {
-            groupesSousCorps.forEach((groupe) => {
-                const estLeGroupeConcerne = groupe.dataset.parentCorps === radio.value;
-                groupe.hidden = !estLeGroupeConcerne;
+        radiosParent.forEach((radio) => {
+            radio.addEventListener('change', () => {
+                groupesEnfants.forEach((groupe) => {
+                    const estLeGroupeConcerne = groupe.dataset[attributParent] === radio.value;
+                    groupe.hidden = !estLeGroupeConcerne;
 
-                // Décoche les sous-corps des groupes masqués pour ne pas envoyer
-                // une valeur incohérente avec le corps_armee choisi
-                if (!estLeGroupeConcerne) {
-                    groupe.querySelectorAll('input[type="radio"]').forEach((input) => {
-                        input.checked = false;
-                    });
-                }
+                    if (!estLeGroupeConcerne) {
+                        groupe.querySelectorAll('input[type="radio"]').forEach((input) => {
+                            input.checked = false;
+                        });
+                    }
+                });
             });
         });
-    });
+    }
+
+    activerRevelationConditionnelle('id_corps_armee', 'sous-corps', 'parentCorps');
+    activerRevelationConditionnelle('id_situation', 'sous-situation', 'parentSituation');
 });

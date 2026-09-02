@@ -1,0 +1,59 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+:root {
+  /*Typographie primaire & secondaire*/
+  --typographie_cursive: "Betania Patmos", cursive;
+  --typographie_poppins: "Poppins", sans-serif;
+
+  /*Onboarding féminin*/
+  --couleur_féminin_primary: #400d1f;
+  --couleur_féminin_secondary: #73345d;
+  --couleur_féminin_tertiary: #d9bad4;
+
+  /*Onboarding masculin*/
+  --couleur_masculin_primary: #56688c;
+  --couleur_masculin_secondary: #23518c;
+
+  /*Onboarding universelle & neutre*/
+  --couleur_universelle_primary: #ccebcf;
+  --couleur_universelle_secondary: #f2f2f2;
+  --couleur_universelle_tertiary: #8c7558;
+  --couleur_universelle_quaternary: #f9d59b;
+
+  /*Taille des textes*/
+  --taille_h1: 1.3rem; /*Ne jamais descendre en dessous de 1.2rem*/
+  --taille_h2: clamp(1.2rem, 0.9rem + 1vw, 1.6rem);
+  --taille_h3: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+  --taille_texte: 1rem;
+}
+
+img {
+  width: 100%;
+}
+
+#contenu_valeur{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+}
+
+#contenu_valeur h2{
+  padding: 15px;
+}
+.valeur {
+  width: 50%;
+  cursor: pointer;
+  border-radius: 100px;
+}
+
+.valeur:hover {
+  width: 60%;
+}

@@ -1,5 +1,6 @@
 </main>
     <footer>
+        <div>
         <a href="#">
         <p>FAQ - Foire aux Questions</p>
         </a>

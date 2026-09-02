@@ -36,7 +36,7 @@ $city_user = trim($_POST['city_user'] ?? '');
 $id_corps_armee = filter_input(INPUT_POST, 'id_corps_armee', FILTER_VALIDATE_INT);
 $id_sous_corps_armee = filter_input(INPUT_POST, 'id_sous_corps_armee', FILTER_VALIDATE_INT) ?: null;
 $id_situation = filter_input(INPUT_POST, 'id_situation', FILTER_VALIDATE_INT);
-$celibat_geo = filter_input(INPUT_POST, 'celibat_geo', FILTER_VALIDATE_INT);
+$id_sous_situation = filter_input(INPUT_POST, 'id_sous_situation', FILTER_VALIDATE_INT) ?: null;
 
 if ($account_name === '' || mb_strlen($account_name) > 150) {
     $erreurs[] = 'Pseudo invalide.';
@@ -70,15 +70,14 @@ if (!$date_naissance || $date_naissance > new DateTime() || $date_naissance < $d
     }
 }
 
-if ($celibat_geo === null || !in_array($celibat_geo, [0, 1], true)) {
-    $erreurs[] = 'Merci de préciser votre situation géographique.';
-}
+
+
 
 // ============================================================
 // 2. Validation des références (corps d'armée, sous-corps, situation)
 //    Factorisée dans models/valider_reference_profil.php (point 5)
 // ============================================================
-valid_ref_profil($pdo, $id_corps_armee, $id_sous_corps_armee, $id_situation, $erreurs);
+valid_ref_profil($pdo, $id_corps_armee, $id_sous_corps_armee, $id_situation, $id_sous_situation, $erreurs);
 
 // ============================================================
 // 3. Arrêt si erreurs de validation détectées jusqu'ici
@@ -132,7 +131,6 @@ try {
         'date_birth_user' => $date_birth_chiffree,
         'phone_user' => $phone_chiffre,
         'city_user' => $city_chiffree,
-        'celibat_geo' => $celibat_geo,
         'est_majeur' => $est_majeur,
         'account_valid' => 0,
         'reg_visible' => 1,
@@ -140,6 +138,7 @@ try {
         'id_corps_armee' => $id_corps_armee,
         'id_sous_corps_armee' => $id_sous_corps_armee,
         'id_situation' => $id_situation,
+        'id_sous_situation' => $id_sous_situation,
     ]);
 } catch (PDOException $e) {
     // Code MySQL 1062 = violation de contrainte UNIQUE (email déjà pris).

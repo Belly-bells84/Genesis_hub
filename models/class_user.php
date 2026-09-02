@@ -25,11 +25,13 @@ class User
     public function recupParId(int $id): ?array
     {
         $stmt = $this->pdo->prepare('
-            SELECT au.*, ca.libelle_corps_armee, sca.libelle_sous_corps, sr.libelle_situation
+            SELECT au.*, ca.libelle_corps_armee, sca.libelle_sous_corps,
+                   sr.libelle_situation, ss.libelle_sous_situation
             FROM account_user au
             JOIN corps_armee ca ON ca.id_corps_armee = au.id_corps_armee
             LEFT JOIN sous_corps_armee sca ON sca.id_sous_corps_armee = au.id_sous_corps_armee
             JOIN situation_relationship sr ON sr.id_situation = au.id_situation
+            LEFT JOIN sous_situation ss ON ss.id_sous_situation = au.id_sous_situation
             WHERE au.id = ?
         ');
         $stmt->execute([$id]);

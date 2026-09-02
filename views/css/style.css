@@ -275,6 +275,16 @@ main {
   font-family: var(--typographie_poppins);
 }
 
-.valeur {
-  width: 25%;
+/*Style du footer*/
+footer {
+  background-color: var(--couleur_féminin_primary);
+  display: flex;
+  flex-direction: row;
+  
+}
+
+footer div a p {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  color: var(--couleur_universelle_secondary);
 }

@@ -15,6 +15,7 @@
 <!--CSS-->
     <link rel="stylesheet" href="/views/css/style.css" />
     <link rel="stylesheet_inscription" href="/views/css/inscription_style.css">
+    <link rel="style_welcome" href="/views/css/welcome_style.css" />
 <!--JS-->
     <script src="/asset/JS/global.js" defer></script>
   </head>

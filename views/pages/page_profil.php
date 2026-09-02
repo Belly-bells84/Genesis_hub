@@ -2,30 +2,20 @@
 require_once __DIR__ . '/../../config/connexion.php';
 require_once __DIR__ . '/../../config/chiffrement.php';
 require_once __DIR__ . '/../../config/csrf.php';
+require_once __DIR__ . '/../../models/class_user.php';
 $pdo = obtenir_connexion();
+$userRepo = new User($pdo);
 
 $est_propre_profil = ($id_profil_consulte === (int) $_SESSION['user_id']);
 
-$stmt = $pdo->prepare('
-    SELECT au.*, ca.libelle_corps_armee, sca.libelle_sous_corps, sr.libelle_situation
-    FROM account_user au
-    JOIN corps_armee ca ON ca.id_corps_armee = au.id_corps_armee
-    LEFT JOIN sous_corps_armee sca ON sca.id_sous_corps_armee = au.id_sous_corps_armee
-    JOIN situation_relationship sr ON sr.id_situation = au.id_situation
-    WHERE au.id = ?
-');
-$stmt->execute([$id_profil_consulte]);
-$profil = $stmt->fetch();
+$profil = $userRepo->recupParId($id_profil_consulte);
 
-// Profil inexistant, ou désactivé par sa propriétaire et consulté par une autre personne
 if (!$profil || (!$est_propre_profil && (int) $profil['reg_visible'] === 0)) {
     http_response_code(404);
     echo '<p>Profil introuvable.</p>';
     return;
 }
 
-// Le déchiffrement des données sensibles ne se fait JAMAIS pour un profil
-// consulté par quelqu'un d'autre — seule la propriétaire peut les voir.
 if ($est_propre_profil) {
     $phone_en_clair = $profil['phone_user'] !== null ? dechiffrer($profil['phone_user']) : '';
     $city_en_clair = $profil['city_user'] !== null ? dechiffrer($profil['city_user']) : '';
@@ -33,14 +23,13 @@ if ($est_propre_profil) {
     $corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FROM corps_armee')->fetchAll();
     $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
     $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
+    $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situation, id_situation FROM sous_situation')->fetchAll();
 }
 ?>
 
 <?php if ($est_propre_profil): ?>
 
-    <!-- ============================================================ -->
-    <!-- MODE ÉDITION : profil de la propriétaire elle-même            -->
-    <!-- ============================================================ -->
+    <script src="/asset/JS/profil.js" defer></script>
     <form class="wizard-inscription" action="/profil/traiter" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
@@ -121,18 +110,22 @@ if ($est_propre_profil) {
                 <?php endforeach; ?>
             </div>
 
-            <div class="toggle-groupe">
-                <label class="toggle">
-                    <input type="radio" name="celibat_geo" value="1"
-                           <?= (int) $profil['celibat_geo'] === 1 ? 'checked' : '' ?> required>
-                    Célibat géographique
-                </label>
-                <label class="toggle">
-                    <input type="radio" name="celibat_geo" value="0"
-                           <?= (int) $profil['celibat_geo'] === 0 ? 'checked' : '' ?> required>
-                    Vie commune
-                </label>
-            </div>
+            <?php foreach ($situation_liste as $situation): ?>
+                <div class="toggle-groupe sous-situation"
+                     data-parent-situation="<?= htmlspecialchars($situation['id_situation']) ?>"
+                     <?= (int) $situation['id_situation'] !== (int) $profil['id_situation'] ? 'hidden' : '' ?>>
+                    <?php foreach ($sous_situation_liste as $sous_sit): ?>
+                        <?php if ($sous_sit['id_situation'] == $situation['id_situation']): ?>
+                            <label class="toggle">
+                                <input type="radio" name="id_sous_situation"
+                                       value="<?= htmlspecialchars($sous_sit['id_sous_situation']) ?>"
+                                       <?= (int) $sous_sit['id_sous_situation'] === (int) ($profil['id_sous_situation'] ?? 0) ? 'checked' : '' ?>>
+                                <?= htmlspecialchars($sous_sit['libelle_sous_situation']) ?>
+                            </label>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
 
             <label class="toggle">
                 <input type="checkbox" name="reg_visible" value="1"
@@ -144,10 +137,6 @@ if ($est_propre_profil) {
         </fieldset>
     </form>
 
-    <!-- ============================================================ -->
-    <!-- Formulaire séparé pour le mot de passe (avec confirmation     -->
-    <!-- du mot de passe actuel) — jamais mélangé au reste du profil   -->
-    <!-- ============================================================ -->
     <form class="wizard-inscription" action="/profil/mot-de-passe/traiter" method="POST">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
@@ -173,10 +162,6 @@ if ($est_propre_profil) {
 
 <?php else: ?>
 
-    <!-- ============================================================ -->
-    <!-- MODE LECTURE SEULE : profil d'une autre utilisatrice          -->
-    <!-- Ni téléphone, ni ville, ni aucune donnée chiffrée affichée.   -->
-    <!-- ============================================================ -->
     <article class="profil-public">
         <?php if ($profil['pictures_user']): ?>
             <img src="<?= htmlspecialchars($profil['pictures_user']) ?>" alt="Photo de profil de <?= htmlspecialchars($profil['account_name']) ?>">
@@ -193,5 +178,3 @@ if ($est_propre_profil) {
     </article>
 
 <?php endif; ?>
-
-<script src="/asset/JS/profil.js"></script>
