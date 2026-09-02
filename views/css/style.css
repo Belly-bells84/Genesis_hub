@@ -107,7 +107,7 @@ header #search a {
 main {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
+  min-height: 82svh;
 }
 #section_1,
 #section_2 {
@@ -167,9 +167,6 @@ main {
   position: relative;
   top: -1.4rem;
   right: -18rem;
-}
-
-#contenu_valeur {
 }
 
 /*Style du formulaire d'inscription/connexion*/
@@ -279,8 +276,6 @@ main {
 footer {
   background-color: var(--couleur_féminin_primary);
   display: flex;
-  flex-direction: row;
-  
 }
 
 footer div a p {

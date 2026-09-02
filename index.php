@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // session_start() doit être appelé avant tout affichage HTML — c'est ce qui
 // permet à $_SESSION d'exister (nécessaire pour le jeton CSRF, et plus tard
@@ -79,13 +81,28 @@ try {
         exit;
     }
 
-    if ($page === 'deconnexion') {
-        $_SESSION = [];
-        session_destroy();
-        header('Location: /connexion');
+    //Routes traitement des messages : 
+
+    if ($page === 'messages/envoyer') {
+    include __DIR__ . '/controller/traiter_message_envoyer.php';
+    exit;
+    }
+
+    if ($page === 'messages/nouveaux') {
+        include __DIR__ . '/controller/traiter_message_nouveaux.php';
         exit;
     }
 
+    if ($page === 'messages/rechercher') {
+        include __DIR__ . '/controller/traiter_message_rechercher.php';
+        exit;
+    }
+    if ($page === 'deconnexion') {
+            $_SESSION = [];
+            session_destroy();
+            header('Location: /connexion');
+            exit;
+        }
     // Contrôle d'accès en liste blanche : toute page absente de cette liste
     // exige une connexion. Une nouvelle page ajoutée = protégée par défaut.
     // "feed" n'y figure pas volontairement : consulter/publier sur le feed
@@ -119,6 +136,8 @@ try {
         'connexion'   => __DIR__ . '/views/pages/page_connexion.php',
         'profil'      => __DIR__ . '/views/pages/page_profil.php',
         'feed'        => __DIR__ . '/views/pages/page_feed.php',
+        'messages'    => __DIR__ . '/views/pages/page_messages.php',
+        'messages/conversation'=> __DIR__ . '/views/pages/page_conversation.php',
     ];
 
     if (!isset($routes[$page])) {

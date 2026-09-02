@@ -35,25 +35,41 @@ a {
   --taille_texte: 1rem;
 }
 
-img {
-  width: 100%;
+
+/*Section des derniers articles*/
+.section_2 h2 {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h2);
+  color: var(--couleur_féminin_primary);
 }
 
-#contenu_valeur{
+.section_2 p {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h3);
+  color: var(--couleur_féminin_primary);
+}
+
+#section_2 .last_art img {
+  width: 10%;
+  border-radius: 15px;
+}
+
+/*Section des valeurs de l'entreprise*/
+#contenu_valeur {
   display: flex;
   flex-direction: row;
   width: auto;
 }
 
-#contenu_valeur h2{
+#contenu_valeur h2 {
   padding: 15px;
 }
 .valeur {
-  width: 50%;
+  width: 20%;
   cursor: pointer;
   border-radius: 100px;
 }
 
 .valeur:hover {
-  width: 60%;
+  width: 25%;
 }

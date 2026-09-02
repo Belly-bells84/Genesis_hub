@@ -15,16 +15,16 @@
 <!--CSS-->
     <link rel="stylesheet" href="/views/css/style.css" />
     <link rel="stylesheet_inscription" href="/views/css/inscription_style.css">
-    <link rel="style_welcome" href="/views/css/welcome_style.css" />
 <!--JS-->
     <script src="/asset/JS/global.js" defer></script>
   </head>
   <body>
+    <?php $lien_accueil = utilisateur_connecte() ? '/feed' : '/accueil'; ?>
     <header>
-            <a href="/" id="logo">
+            <a href="<?= $lien_accueil ?>" id="logo">
             <img src="/views/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
-            <a href="/">
+            <a href="<?= $lien_accueil ?>">
             <span id="genesis_name">The GENESIS</span>
             <span class="genesis_devise">Les coeurs s'envolent,</span>
             <span class="genesis_devise">Genesis les rassemblent</span>
@@ -32,6 +32,8 @@
         </div>
     <nav class="navigation_genesis">
         <?php if (utilisateur_connecte()): ?>
+            <a href="/profil">Mon profil</a>
+            <a href="/messages">Messages</a>
             <a href="/deconnexion">Déconnexion</a>
         <?php else: ?>
             <a href="/inscription">S'inscrire</a>
