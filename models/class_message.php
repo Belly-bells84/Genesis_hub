@@ -160,17 +160,20 @@ class MessagePrivate
      */
     public function rechercherUtilisateurs(string $terme, int $id_utilisateur_courant): array
     {
+        // Note : on n'exclut plus l'utilisatrice courante des résultats,
+        // pour permettre de s'envoyer un message à soi-même (bloc-notes
+        // personnel, tests, etc.). $id_utilisateur_courant n'est donc
+        // plus utilisé ici, mais on garde le paramètre pour ne pas
+        // casser les appels existants et pour une éventuelle réutilisation.
         $stmt = $this->pdo->prepare('
             SELECT id, account_name
             FROM account_user
             WHERE account_name LIKE :terme
-              AND id != :id_utilisateur_courant
             ORDER BY account_name ASC
             LIMIT 10
         ');
         $stmt->execute([
             'terme' => '%' . $terme . '%',
-            'id_utilisateur_courant' => $id_utilisateur_courant,
         ]);
 
         return $stmt->fetchAll();

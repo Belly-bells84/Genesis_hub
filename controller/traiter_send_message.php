@@ -40,10 +40,6 @@ if (!$id_destinataire || $contenu_message === '' || mb_strlen($contenu_message) 
     repondre_erreur(422, 'Message invalide.');
 }
 
-if ($id_destinataire === $id_utilisateur) {
-    repondre_erreur(422, 'Vous ne pouvez pas vous envoyer un message à vous-même.');
-}
-
 if (!$messageRepo->utilisateurExiste($id_destinataire)) {
     repondre_erreur(404, 'Destinataire introuvable.');
 }

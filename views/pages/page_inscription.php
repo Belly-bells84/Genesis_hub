@@ -8,6 +8,7 @@ $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps
 $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
 $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situation, id_situation FROM sous_situation')->fetchAll();
 ?>
+<link rel="stylesheet" href="/views/css/inscription_style.css"/>
 <script src="/asset/JS/inscription.js" defer></script>
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
 

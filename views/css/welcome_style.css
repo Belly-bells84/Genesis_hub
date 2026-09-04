@@ -61,7 +61,7 @@ a {
   width: auto;
 }
 
-#contenu_valeur h2 {
+.contenu_valeur h2 {
   padding: 15px;
 }
 .valeur {

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/csrf.php';
 ?>
-
+<link rel="stylesheet" href="/views/css/connexion_style.css">
 <form id="form-connexion" class="wizard-inscription" action="/connexion/traiter" method="POST">
 
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">

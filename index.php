@@ -14,7 +14,8 @@ require_once __DIR__ . '/exceptions/App_exception.php';
 require_once __DIR__ . '/exceptions/Page_introuvable.php';
 require_once __DIR__ . '/exceptions/Error_affichage_exception.php';
 
-$page = $_GET['url'] ?? 'accueil';
+
+$page = $_GET['url'] ?? '';
 
 /**
  * Inclut une vue en vérifiant d'abord son existence, pour transformer un
@@ -23,6 +24,12 @@ $page = $_GET['url'] ?? 'accueil';
  */
 function inclure_vue(string $page, string $chemin_vue): void
 {
+    // Rend visibles aux vues incluses les variables définies dans la portée
+    // globale de index.php. Sans ce mot-clé, include() ici s'exécute dans
+    // la portée LOCALE de cette fonction, qui ne voit pas automatiquement
+    // les variables globales comme $id_profil_consulte ou $id_contact_message.
+    global $id_profil_consulte, $id_contact_message;
+
     if (!is_file($chemin_vue)) {
         throw new ErreurAffichageException($page, $chemin_vue);
     }
@@ -84,17 +91,17 @@ try {
     //Routes traitement des messages : 
 
     if ($page === 'messages/envoyer') {
-    include __DIR__ . '/controller/traiter_message_envoyer.php';
+    include __DIR__ . '/controller/traiter_send_message.php';
     exit;
     }
 
     if ($page === 'messages/nouveaux') {
-        include __DIR__ . '/controller/traiter_message_nouveaux.php';
+        include __DIR__ . '/controller/traiter_new_message.php';
         exit;
     }
 
     if ($page === 'messages/rechercher') {
-        include __DIR__ . '/controller/traiter_message_rechercher.php';
+        include __DIR__ . '/controller/traiter_message_search.php';
         exit;
     }
     if ($page === 'deconnexion') {
@@ -107,7 +114,7 @@ try {
     // exige une connexion. Une nouvelle page ajoutée = protégée par défaut.
     // "feed" n'y figure pas volontairement : consulter/publier sur le feed
     // nécessite d'être connectée, comme "profil".
-    $pages_publiques = ['accueil', 'inscription', 'connexion'];
+    $pages_publiques = ['', 'inscription', 'connexion'];
 
     if (!in_array($page, $pages_publiques, true)) {
         // exiger_connexion() redirige elle-même vers /connexion et fait
@@ -129,14 +136,21 @@ try {
         $id_profil_consulte = (int) $matches[1];
         $page = 'profil';
     }
+
+    $id_contact_message = null;
+
+    if (preg_match('#^messages/(\d+)$#', $page, $matches)) {
+        $id_contact_message = (int) $matches[1];
+        $page = 'messages/conversation';
+    }
 //Pourquoi le tableau ? Pour la maintenanbilité, la factorisation et la lisibilité du code.
     $routes = [
-        'accueil'     => __DIR__ . '/views/pages/welcome.php',
+        ''     => __DIR__ . '/views/pages/welcome.php',
         'inscription' => __DIR__ . '/views/pages/page_inscription.php',
         'connexion'   => __DIR__ . '/views/pages/page_connexion.php',
         'profil'      => __DIR__ . '/views/pages/page_profil.php',
         'feed'        => __DIR__ . '/views/pages/page_feed.php',
-        'messages'    => __DIR__ . '/views/pages/page_messages.php',
+        'messages'    => __DIR__ . '/views/pages/page_message.php',
         'messages/conversation'=> __DIR__ . '/views/pages/page_conversation.php',
     ];
 
@@ -162,9 +176,6 @@ try {
     echo '<p>Une erreur est survenue lors du traitement de votre demande.</p>';
 
 } catch (Throwable $e) {
-    // Filet de sécurité : toute erreur totalement imprévue (bug, exception
-    // native PHP, etc.) est journalisée pour le débogage, mais l'utilisatrice
-    // ne voit jamais de stack trace ni de chemin de fichier.
     error_log('[Erreur inattendue] ' . $e->getMessage());
     http_response_code(500);
     echo '<p>Une erreur inattendue est survenue. Merci de réessayer plus tard.</p>';

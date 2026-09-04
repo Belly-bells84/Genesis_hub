@@ -13,10 +13,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&display=swap" rel="stylesheet">
 <!--CSS-->
-    <link rel="stylesheet" href="/views/css/style.css" />
-    <link rel="stylesheet_inscription" href="/views/css/inscription_style.css">
+    <link rel="stylesheet" href="views/css/style.css"/>
+<!--Sentry JS--->
+    <script src="https://js-de.sentry-cdn.com/11c97357c696b3c26ef5c86b25d1c547.min.js" crossorigin="anonymous"></script>
 <!--JS-->
-    <script src="/asset/JS/global.js" defer></script>
+    <script src="/views/js/global.js" defer></script>
   </head>
   <body>
     <?php $lien_accueil = utilisateur_connecte() ? '/feed' : '/accueil'; ?>

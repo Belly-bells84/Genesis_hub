@@ -1,8 +1,8 @@
-<link rel="style_welcome" href="/views/css/welcome_style.css" />
+<link rel="stylesheet" href="/views/css/welcome_style.css" />
 <!--Section 1 : Lettre ouverte de la fondatrice-->
 <section id="section_1">
     <article id="presentation_fondatrice">
-        <img src="/asset/IMG/Belen_LEGER_fondatrice.jpg" alt="Photographie de présentation de la créatrice - Belén LEGER">
+        <img src="/views/asset/IMG/Belen_fondatrice.jpeg" alt="Photographie de présentation de la créatrice - Belén LEGER">
             <div class="contenu">
                 <h1>Derriére GENESIS : Le mot de Belén</h1>
                 <p><em>Chére Base Arriére,</em></p>
