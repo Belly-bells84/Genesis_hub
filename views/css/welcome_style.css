@@ -1,75 +1,103 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+.container_section {
+  display: flex;
+}
+#presentation_fondatrice {
+  width: 90%;
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 10px;
 }
 
-a {
-  text-decoration: none;
+#presentation_fondatrice img {
+  width: 150px;
+  max-width: 400px;
+  border-radius: 25px;
+  gap: 1rem;
+  margin: 5px;
 }
 
-:root {
-  /*Typographie primaire & secondaire*/
-  --typographie_cursive: "Betania Patmos", cursive;
-  --typographie_poppins: "Poppins", sans-serif;
-
-  /*Onboarding féminin*/
-  --couleur_féminin_primary: #400d1f;
-  --couleur_féminin_secondary: #73345d;
-  --couleur_féminin_tertiary: #d9bad4;
-
-  /*Onboarding masculin*/
-  --couleur_masculin_primary: #56688c;
-  --couleur_masculin_secondary: #23518c;
-
-  /*Onboarding universelle & neutre*/
-  --couleur_universelle_primary: #ccebcf;
-  --couleur_universelle_secondary: #f2f2f2;
-  --couleur_universelle_tertiary: #8c7558;
-  --couleur_universelle_quaternary: #f9d59b;
-
-  /*Taille des textes*/
-  --taille_h1: 1.3rem; /*Ne jamais descendre en dessous de 1.2rem*/
-  --taille_h2: clamp(1.2rem, 0.9rem + 1vw, 1.6rem);
-  --taille_h3: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
-  --taille_texte: 1rem;
+#presentation_fondatrice .contenu {
+  width: 70%;
+  border: 1px solid var(--color_tertiary);
+  border-radius: 5px;
+  background-color: var(--color_tertiary);
+  padding: 10px;
 }
 
-
-/*Section des derniers articles*/
-.section_2 h2 {
+#presentation_fondatrice .contenu h1 {
   font-family: var(--typographie_poppins);
-  font-size: var(--taille_h2);
-  color: var(--couleur_féminin_primary);
+  color: var(----color_primary);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  gap: 1rem;
 }
 
-.section_2 p {
+#presentation_fondatrice .contenu p {
   font-family: var(--typographie_poppins);
-  font-size: var(--taille_h3);
-  color: var(--couleur_féminin_primary);
+  color: var(--color_secondary);
+  font-size: var(--taille_texte);
 }
 
-#section_2 .last_art img {
-  width: 10%;
-  border-radius: 15px;
+#presentation_fondatrice a {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  color: var(--color_secondary);
+  background-color: var(----color_primary);
+  border-radius: 5px;
+  padding: 5px;
+
+  position: relative;
+  top: -1.4rem;
+  right: -18rem;
 }
 
 /*Section des valeurs de l'entreprise*/
-#contenu_valeur {
+.contenu_valeur {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h3);
   display: flex;
-  flex-direction: row;
   width: auto;
+  align-items: center;
+  gap: 50px;
 }
 
-.contenu_valeur h2 {
-  padding: 15px;
-}
 .valeur {
-  width: 20%;
+  width: 100px;
   cursor: pointer;
   border-radius: 100px;
 }
 
 .valeur:hover {
-  width: 25%;
+  width: 105px;
+}
+
+/*Section des derniers articles*/
+.section_2 h2 {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h2);
+  color: var(----color_primary);
+}
+
+.section_2 h3 {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h3);
+  color: var(----color_primary);
+}
+
+.section_2 p {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_h3);
+  color: var(----color_primary);
+}
+
+.art_img {
+  width: 70px;
+  border-radius: 15px;
+}
+
+art_img:hover {
+  width: 75px;
+  border-radius: 5px;
 }

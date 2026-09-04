@@ -19,11 +19,11 @@
 <!--JS-->
     <script src="/views/js/global.js" defer></script>
   </head>
-  <body>
-    <?php $lien_accueil = utilisateur_connecte() ? '/feed' : '/accueil'; ?>
+  <body class="<?= $_SESSION['color'] ?? 'neutral' ?>">
+    <?php $lien_accueil = utilisateur_connecte() ? '/feed' : '/'; ?>
     <header>
             <a href="<?= $lien_accueil ?>" id="logo">
-            <img src="/views/asset/IMG/Logo_GENESIS.png" alt="Logo du réseau social GENESIS"></a>
+            <img src="/views/asset/IMG/Genesis.png" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
             <a href="<?= $lien_accueil ?>">
             <span id="genesis_name">The GENESIS</span>

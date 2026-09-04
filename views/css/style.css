@@ -8,25 +8,29 @@ a {
   text-decoration: none;
 }
 
+:root .neutral {
+  --color_primary: #ccebcf;
+  --color_secondary:#8c7558;;
+  --color_tertiary: #f2f2f2;
+  --color_quaternary: #f9d59b;
+}
+
+:root .color_women {
+  --color_primary: #400d1f;
+  --color_secondary: #73345d;
+  --color_tertiary: #f2f2f2;
+  --color_quaternary: #d9bad4;
+}
+
+:root .color_men {
+  --color_primary: #56688c;
+  --color_secondary: #23518c;
+  --color_tertiary: #f2f2f2;
+}
 :root {
   /*Typographie primaire & secondaire*/
   --typographie_cursive: "Betania Patmos", cursive;
   --typographie_poppins: "Poppins", sans-serif;
-
-  /*Onboarding féminin*/
-  --couleur_féminin_primary: #400d1f;
-  --couleur_féminin_secondary: #73345d;
-  --couleur_féminin_tertiary: #d9bad4;
-
-  /*Onboarding masculin*/
-  --couleur_masculin_primary: #56688c;
-  --couleur_masculin_secondary: #23518c;
-
-  /*Onboarding universelle & neutre*/
-  --couleur_universelle_primary: #ccebcf;
-  --couleur_universelle_secondary: #f2f2f2;
-  --couleur_universelle_tertiary: #8c7558;
-  --couleur_universelle_quaternary: #f9d59b;
 
   /*Taille des textes*/
   --taille_h1: 1.3rem; /*Ne jamais descendre en dessous de 1.2rem*/
@@ -42,7 +46,7 @@ img {
 /*Style du header*/
 header {
   display: flex;
-  background-color: var(--couleur_féminin_primary);
+  background-color: var(--color_primary);
   position: fixed;
   top: 0;
   z-index: 900;
@@ -68,7 +72,7 @@ header #genesis {
 
 header div #genesis_name {
   font-family: var(--typographie_poppins);
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,15 +80,16 @@ header div #genesis_name {
 
 header div .genesis_devise {
   font-family: var(--typographie_cursive);
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.1rem;
 }
 
 header .navigation_genesis {
   font-family: var(--typographie_poppins);
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
   display: flex;
   align-items: center;
   justify-self: flex-end;
@@ -96,190 +101,38 @@ header .navigation_genesis {
 }
 
 header nav a {
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
 }
 
 header #search a {
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
 }
 
 /*Style du Main*/
 main {
   display: flex;
   flex-wrap: wrap;
-  min-height: 82svh;
+  min-height: 81.6svh;
+  background-color: var(--color_tertiary);
 }
 #section_1,
 #section_2 {
-  background-color: var(--couleur_universelle_secondary);
+  background-color: var(--color_tertiary);
   display: flex;
   flex-direction: column;
   width: 50%;
 }
 
-#presentation_fondatrice {
-  width: 90%;
-  display: flex;
-  align-content: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 10px;
-}
+/*Style du Footer*/
 
-#presentation_fondatrice img {
-  width: 150px;
-  max-width: 400px;
-  border-radius: 25px;
-  gap: 1rem;
-  margin: 5px;
-}
-
-#presentation_fondatrice .contenu {
-  width: 70%;
-  border: 1px solid var(--couleur_féminin_tertiary);
-  border-radius: 5px;
-  background-color: var(--couleur_féminin_tertiary);
-  padding: 10px;
-}
-
-#presentation_fondatrice .contenu h1 {
-  font-family: var(--typographie_poppins);
-  color: var(--couleur_féminin_primary);
-  font-size: 1.3rem;
-  line-height: 1.25;
-  gap: 1rem;
-}
-
-#presentation_fondatrice .contenu p {
-  font-family: var(--typographie_poppins);
-  color: var(--couleur_féminin_secondary);
-  font-size: var(--taille_texte);
-}
-
-#presentation_fondatrice a {
-  font-family: var(--typographie_poppins);
-  font-size: var(--taille_texte);
-  color: var(--couleur_universelle_secondary);
-  background-color: var(--couleur_féminin_primary);
-  border-radius: 5px;
-  padding: 5px;
-
-  position: relative;
-  top: -1.4rem;
-  right: -18rem;
-}
-
-/*Style du formulaire d'inscription/connexion*/
-.wizard-inscription {
-  max-width: 500px;
-  margin: 2rem auto;
-  font-family: var(--typographie_poppins);
-}
-
-.etape {
-  border: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.etape legend {
-  font-size: var(--taille_h2);
-  color: var(--couleur_féminin_primary);
-  margin-bottom: 0.5rem;
-}
-
-.etape label:not(.toggle) {
-  font-size: var(--taille_texte);
-  color: var(--couleur_féminin_secondary);
-  margin-bottom: 0.25rem;
-}
-
-.etape input[type="text"],
-.etape input[type="email"],
-.etape input[type="password"],
-.etape input[type="date"],
-.etape input[type="file"] {
-  padding: 0.6rem;
-  border: 1px solid var(--couleur_féminin_tertiary);
-  border-radius: 5px;
-  font-family: var(--typographie_poppins);
-  font-size: var(--taille_texte);
-}
-
-.toggle-groupe {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.toggle {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--couleur_féminin_tertiary);
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: var(--taille_texte);
-  color: var(--couleur_féminin_secondary);
-}
-
-.toggle input[type="radio"] {
-  margin-right: 0.5rem;
-  accent-color: var(--couleur_féminin_primary);
-}
-
-.toggle:has(input:checked) {
-  background-color: var(--couleur_féminin_tertiary);
-  color: var(--couleur_féminin_primary);
-  font-weight: 600;
-}
-
-.fleche-suivant,
-.fleche-retour,
-.bouton-valider {
-  font-family: var(--typographie_poppins);
-  font-size: var(--taille_texte);
-  border: none;
-  border-radius: 5px;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-}
-
-.fleche-suivant,
-.bouton-valider {
-  background-color: var(--couleur_féminin_primary);
-  color: var(--couleur_universelle_secondary);
-  align-self: flex-end;
-}
-
-.fleche-retour {
-  background-color: transparent;
-  color: var(--couleur_féminin_secondary);
-  align-self: flex-start;
-}
-
-.message-erreur {
-  color: #b00020;
-  font-size: var(--taille_texte);
-  font-family: var(--typographie_poppins);
-}
-
-.message-succes {
-  color: #1a7a3a;
-  font-size: var(--taille_texte);
-  font-family: var(--typographie_poppins);
-}
-
-/*Style du footer*/
-footer {
-  background-color: var(--couleur_féminin_primary);
+.container_footer {
+  background-color: var(--color_primary);
+  width: 100%;
   display: flex;
 }
 
-footer div a p {
+.mention_footer {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_texte);
-  color: var(--couleur_universelle_secondary);
+  color: var(--color_secondary);
 }

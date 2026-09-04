@@ -1,0 +1,312 @@
+/*
+  Compléments à style.css pour l'écran d'inscription.
+  Ce fichier n'écrase aucune règle existante : il ne couvre que
+  ce que style.css ne prévoit pas encore (pastilles d'étape,
+  regroupement label+champ+message, aperçu photo, focus clavier).
+  À fusionner dans style.css quand tu le juges utile.
+*/
+
+/*Style du formulaire d'inscription/connexion*/
+.wizard-inscription {
+  max-width: 500px;
+  margin: 2rem auto;
+  font-family: var(--typographie_poppins);
+}
+
+.etape {
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.etape legend {
+  font-size: var(--taille_h2);
+  color: var(----color_primary);
+  margin-bottom: 0.5rem;
+}
+
+.etape label:not(.toggle) {
+  font-size: var(--taille_texte);
+  color: var(----color_secondary);
+  margin-bottom: 0.25rem;
+}
+
+.etape input[type="email"],
+.etape input[type="password"] {
+  padding: 0.6rem;
+  border: 1px solid var(----color_tertiary);
+  border-radius: 5px;
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+}
+
+.etape[hidden] {
+  display: none;
+}
+
+.etape input:focus-visible,
+.toggle input:focus-visible + *,
+.fleche-suivant:focus-visible,
+.fleche-retour:focus-visible,
+.bouton-valider:focus-visible {
+  outline: 2px solid var(----color_tertiary);
+  outline-offset: 2px;
+}
+
+.etape input:focus,
+.toggle input:focus + *,
+.fleche-suivant:focus,
+.fleche-retour:focus,
+.bouton-valider:focus {
+  background-color: var(----color_tertiary);
+}
+
+.toggle-groupe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(----color_tertiary);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: var(--taille_texte);
+  color: var(----color_secondary);
+}
+
+.toggle input[type="radio"] {
+  margin-right: 0.5rem;
+  accent-color: var(----color_primary);
+}
+
+.toggle:has(input:checked) {
+  background-color: var(----color_tertiary);
+  color: var(----color_primary);
+  font-weight: 600;
+}
+
+.bouton-valider {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  border: 1px var(----color_primary);
+  border-radius: 5px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  background-color: var(----color_primary);
+  color: var(----color_secondary);
+  align-self: center;
+}
+
+.bouton-valider:hover {
+  background-color: var(----color_secondary);
+  color: var(----color_primary);
+}
+
+.message-erreur {
+  color: #b00020;
+  font-size: var(--taille_texte);
+  font-family: var(--typographie_poppins);
+}
+
+.message-succes {
+  color: #1a7a3a;
+  font-size: var(--taille_texte);
+  font-family: var(--typographie_poppins);
+}
+
+/* Le header a "position: relative" en dernier dans ton fichier :
+   on le fixe donc en haut du wizard plutôt qu'en position fixed. */
+body {
+  font-family: var(--typographie_poppins);
+  background-color: var(----color_secondary);
+}
+
+header #logo img {
+  padding: 10px;
+}
+
+header #genesis_name {
+  font-size: var(--taille_h1);
+  font-weight: 600;
+  margin: 0;
+}
+
+header .genesis_devise {
+  font-family: var(--typographie_cursive);
+  font-size: 1.3rem;
+}
+
+header .navigation_genesis nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+header #search a svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+/* Pastilles d'avancement du wizard */
+.wizard-progression {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem auto 0;
+}
+
+.wizard-progression span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(----color_tertiary);
+}
+
+.wizard-progression span.actif {
+  background-color: var(----color_primary);
+  width: 22px;
+  border-radius: 4px;
+}
+
+/* Regroupe une étiquette, son champ et son message d'aide/erreur */
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.champ input {
+  width: 100%;
+}
+
+.champ small {
+  font-size: 0.8rem;
+  color: var(----color_secondary);
+  opacity: 0.8;
+}
+
+/* Regroupe un intitulé de question au-dessus de son toggle-groupe */
+.question-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.question-toggle > span {
+  font-size: var(--taille_texte);
+  color: var(----color_secondary);
+}
+
+/* Aperçu de la photo de profil choisie */
+.apercu-photo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.apercu-photo img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(----color_tertiary);
+  display: none;
+}
+
+.apercu-photo img.visible {
+  display: block;
+}
+
+/* États et accessibilité, non prévus dans style.css */
+
+.wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 560px) {
+  .wizard-inscription {
+    margin: 1rem;
+  }
+}
+
+/*Style du formulaire d'inscription/connexion*/
+.wizard-inscription {
+  max-width: 500px;
+  margin: 2rem auto;
+  font-family: var(--typographie_poppins);
+}
+
+.etape legend {
+  font-size: var(--taille_h2);
+  color: var(----color_primary);
+  margin-bottom: 0.5rem;
+}
+
+.etape label:not(.toggle) {
+  font-size: var(--taille_texte);
+  color: var(----color_secondary);
+  margin-bottom: 0.25rem;
+}
+
+.etape input[type="text"],
+.etape input[type="email"],
+.etape input[type="password"],
+.etape input[type="date"],
+.etape input[type="file"] {
+  padding: 0.6rem;
+  border: 1px solid var(----color_tertiary);
+  border-radius: 5px;
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+}
+
+.toggle-groupe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color_tertiary);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: var(--taille_texte);
+  color: var(----color_secondary);
+}
+
+.toggle input[type="radio"] {
+  margin-right: 0.5rem;
+  accent-color: var(----color_primary);
+}
+
+.toggle:has(input:checked) {
+  background-color: var(--color_tertiary);
+  color: var(----color_primary);
+  font-weight: 600;
+}
+
+.message-erreur {
+  color: #b00020;
+  font-size: var(--taille_texte);
+  font-family: var(--typographie_poppins);
+}
+
+.message-succes {
+  color: #1a7a3a;
+  font-size: var(--taille_texte);
+  font-family: var(--typographie_poppins);
+}

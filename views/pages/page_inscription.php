@@ -19,20 +19,24 @@ $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situ
     <fieldset class="etape" data-step="1">
         <legend>Créer mon compte</legend>
 
+        <legend>Ajoute une photo de profil</legend>
+        <label for="pictures_user">Photo (facultatif)</label>
+        <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp">
+
+        <label for="account_name">Nom</label>
+        <input type="text" id="account_name" name="account_name" required maxlength="150">
+
+        <label for="account_name">Prénom</label>
+        <input type="text" id="account_name" name="account_name" required maxlength="150">
+
         <label for="account_name">Pseudo</label>
         <input type="text" id="account_name" name="account_name" required maxlength="150">
 
-        <label for="email_user">Email</label>
-        <input type="email" id="email_user" name="email_user" required maxlength="255">
-
-        <label for="password_user">Mot de passe</label>
-        <input type="password" id="password_user" name="password_user" required minlength="8">
-
-        <label for="password_confirmation">Confirmer le mot de passe</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8">
-
         <label for="date_birth_user">Date de naissance</label>
         <input type="date" id="date_birth_user" name="date_birth_user" required>
+
+        <label for="genre_sexe_user">Tu es...</label>
+        <!-- <input type="radio" name="genre_sexe_user" value="//<?= $_SESSION['color'] ?? 'neutral' ?>"> -->
 
         <button type="button" class="fleche-suivant" aria-label="Étape suivante">→</button>
     </fieldset>
@@ -112,12 +116,17 @@ $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situ
     </fieldset>
 
 
-    <!-- ÉTAPE 3 : photo de profil-->
+    <!-- ÉTAPE 3 : MDP + Email-->
     <fieldset class="etape" data-step="3" hidden>
-        <legend>Ajoute une photo de profil</legend>
 
-        <label for="pictures_user">Photo (facultatif)</label>
-        <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp">
+        <label for="email_user">Email</label>
+        <input type="email" id="email_user" name="email_user" required maxlength="255">
+
+        <label for="password_user">Mot de passe</label>
+        <input type="password" id="password_user" name="password_user" required minlength="8">
+
+        <label for="password_confirmation">Confirmer le mot de passe</label>
+        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8">
 
         <button type="button" class="fleche-retour" aria-label="Étape précédente">←</button>
         <button type="submit" class="bouton-valider">Créer mon compte</button>

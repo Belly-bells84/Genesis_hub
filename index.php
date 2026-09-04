@@ -15,7 +15,7 @@ require_once __DIR__ . '/exceptions/Page_introuvable.php';
 require_once __DIR__ . '/exceptions/Error_affichage_exception.php';
 
 
-$page = $_GET['url'] ?? '';
+$page = $_GET['url'] ?? '/';
 
 /**
  * Inclut une vue en vérifiant d'abord son existence, pour transformer un
@@ -114,7 +114,7 @@ try {
     // exige une connexion. Une nouvelle page ajoutée = protégée par défaut.
     // "feed" n'y figure pas volontairement : consulter/publier sur le feed
     // nécessite d'être connectée, comme "profil".
-    $pages_publiques = ['', 'inscription', 'connexion'];
+    $pages_publiques = ['/', 'inscription', 'connexion'];
 
     if (!in_array($page, $pages_publiques, true)) {
         // exiger_connexion() redirige elle-même vers /connexion et fait
@@ -145,7 +145,7 @@ try {
     }
 //Pourquoi le tableau ? Pour la maintenanbilité, la factorisation et la lisibilité du code.
     $routes = [
-        ''     => __DIR__ . '/views/pages/welcome.php',
+        '/'     => __DIR__ . '/views/pages/welcome.php',
         'inscription' => __DIR__ . '/views/pages/page_inscription.php',
         'connexion'   => __DIR__ . '/views/pages/page_connexion.php',
         'profil'      => __DIR__ . '/views/pages/page_profil.php',
