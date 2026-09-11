@@ -151,7 +151,7 @@ try {
         'profil'      => __DIR__ . '/views/pages/page_profil.php',
         'feed'        => __DIR__ . '/views/pages/page_feed.php',
         'messages'    => __DIR__ . '/views/pages/page_message.php',
-        'messages/conversation'=> __DIR__ . '/views/pages/page_conversation.php',
+        'conversation'=> __DIR__ . '/views/pages/page_conversation.php',
     ];
 
     if (!isset($routes[$page])) {

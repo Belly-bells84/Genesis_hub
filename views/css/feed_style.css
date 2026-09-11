@@ -1,0 +1,200 @@
+/*Style du feed*/
+.feed {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 1rem;
+}
+
+.publication {
+  background-color: var(--color_tertiary);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.publication-entete {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.publication-auteur {
+  color: var(--color_primary);
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  display: flex;
+  align-items: center;
+}
+
+.publication-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.publication-avatar-defaut {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color_secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color_tertiary);
+  font-family: var(--typographie_poppins);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.publication-identite {
+  flex-grow: 1;
+  font-family: var(--typographie_poppins);
+}
+
+.publication-identite strong {
+  display: block;
+  color: var(--color_primary);
+}
+
+.publication-identite span {
+  color: var(--color_secondary);
+  font-size: 0.9rem;
+}
+
+.publication-media {
+  width: 100%;
+  display: block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.publication-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem 0.25rem;
+}
+
+.publication-date {
+  color: var(--color_primary);
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  display: flex;
+  align-items: flex-end;
+}
+
+.bouton-like,
+.bouton-commentaire-icone {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color_primary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+}
+
+.bouton-like-actif {
+  color: var(--color_quaternary);
+}
+
+.publication-contenu {
+  padding: 0.25rem 1rem 1rem;
+  font-family: var(--typographie_poppins);
+  color: var(--color_primary);
+}
+
+.publication-contenu strong {
+  margin-right: 0.4rem;
+}
+
+.commentaires {
+  padding: 0 1rem 1rem;
+  font-family: var(--typographie_poppins);
+}
+
+.nb-commentaires {
+  color: var(--color_secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.commentaire {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+  color: var(--color_primary);
+}
+
+.form-commentaire {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.form-commentaire input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--color_secondary);
+  border-radius: 20px;
+  font-family: var(--typographie_poppins);
+}
+
+.bouton-commenter {
+  background-color: var(--color_primary);
+  color: var(--color_tertiary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: var(--typographie_poppins);
+}
+
+.bouton-supprimer {
+  background-color: var(--color_quaternary);
+  color: var(--color_tertiary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: var(--typographie_poppins);
+}
+
+/* Formulaire d'ajout de publication */
+.wizard-inscription {
+  display: flex;
+  padding: 0.5rem 1rem;
+}
+
+.etape {
+  display: flex;
+  border: none;
+  flex-direction: column;
+}
+.etape textarea {
+  border: none;
+  border-radius: 15px;
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  size: 50px;
+}
+
+.etape input {
+}
+
+.bouton-valider {
+  background-color: var(--color_primary);
+  color: var(--color_tertiary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: var(--typographie_poppins);
+}

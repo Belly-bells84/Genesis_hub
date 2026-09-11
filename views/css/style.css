@@ -9,23 +9,24 @@ a {
 }
 
 :root .neutral {
-  --color_primary: #ccebcf;
-  --color_secondary:#8c7558;;
-  --color_tertiary: #f2f2f2;
-  --color_quaternary: #f9d59b;
+  --color_primary:  #2E4A3D;
+  --color_secondary: #5FA88A;
+  --color_tertiary: #fafaf8;
+  --color_quaternary: #C97B4A;
 }
 
 :root .color_women {
   --color_primary: #400d1f;
   --color_secondary: #73345d;
-  --color_tertiary: #f2f2f2;
+  --color_tertiary: #fafaf8;
   --color_quaternary: #d9bad4;
 }
 
 :root .color_men {
-  --color_primary: #56688c;
-  --color_secondary: #23518c;
-  --color_tertiary: #f2f2f2;
+  --color_primary: #23518c;
+  --color_secondary: #56688C;
+  --color_tertiary: #fafaf8;
+  --color_quaternary: #E8A93B;
 }
 :root {
   /*Typographie primaire & secondaire*/

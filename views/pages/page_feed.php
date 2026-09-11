@@ -17,10 +17,10 @@ $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publica
 <!-- Formulaire de publication                                     -->
 <!-- ============================================================ -->
 <script src="/views/js/feed.js" defer></script>
+<link rel="stylesheet" href="/views/css/feed_style.css">
 <form class="wizard-inscription" action="/feed/publier" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
     <fieldset class="etape">
-        <legend>Publier</legend>
         <textarea name="contenu_publication" maxlength="1500" placeholder="Quoi de neuf ?"></textarea>
         <input type="file" name="media" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm">
         <button type="submit" class="bouton-valider">Publier</button>
@@ -39,7 +39,6 @@ $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publica
                 <form action="/feed/supprimer" method="POST" class="form-supprimer">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
                     <input type="hidden" name="id_publication" value="<?= (int) $publication['id_publication'] ?>">
-                    <button type="submit" class="bouton-supprimer">Supprimer</button>
                 </form>
             <?php endif; ?>
 
@@ -66,7 +65,7 @@ $commentaires_par_publication = $publicationRepo->recup_commentaires_par_publica
                     <?= $publication['deja_aime'] ? '❤️' : '🤍' ?> <?= (int) $publication['nb_likes'] ?>
                 </button>
             </form>
-
+        <button type="submit" class="bouton-supprimer">Supprimer</button>   
             <div class="commentaires">
                 <p class="nb-commentaires"><?= (int) $publication['nb_commentaires'] ?> commentaires</p>
 

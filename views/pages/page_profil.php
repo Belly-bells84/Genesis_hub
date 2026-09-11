@@ -30,6 +30,7 @@ if ($est_propre_profil) {
 <?php if ($est_propre_profil): ?>
 
     <script src="/asset/JS/profil.js" defer></script>
+    <link rel="stylesheet" href="profil_style.css">
     <form class="wizard-inscription" action="/profil/traiter" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
