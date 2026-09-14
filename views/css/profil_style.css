@@ -93,7 +93,7 @@
 }
 
 .profil-avatar__edit {
-    position: absolute;
+    display: flex;
     right: -2px;
     bottom: -2px;
     width: 32px;
