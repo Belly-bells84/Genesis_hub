@@ -1,0 +1,21 @@
+/* message_style.css
+   Spécifique à page_message.php. Le CSS du sidebar est dans
+   messages_common.css (à charger AVANT ce fichier).
+*/
+
+.messages-panel-vide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--color_tertiary);
+  text-align: center;
+}
+
+.messages-panel-vide p {
+  max-width: 380px;
+  color: color-mix(in srgb, var(--color_primary) 60%, transparent);
+  font-size: var(--taille_texte);
+  line-height: 1.5;
+}

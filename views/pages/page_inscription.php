@@ -1,15 +1,17 @@
 <?php
 require_once __DIR__ . '/../../config/connexion.php';
 require_once __DIR__ . '/../../config/csrf.php';
+require_once __DIR__ . '/../../models/class_referentiel.php';
 $pdo = obtenir_connexion();
+$referentielRepo = new Referentiel($pdo);
 
-$corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FROM corps_armee')->fetchAll();
-$sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
-$situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
-$sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situation, id_situation FROM sous_situation')->fetchAll();
+$corps_armee_liste = $referentielRepo->recupCorpsArmee();
+$sous_corps_liste = $referentielRepo->recupSousCorpsArmee();
+$situation_liste = $referentielRepo->recupSituations();
+$sous_situation_liste = $referentielRepo->recupSousSituations();
 ?>
-<link rel="stylesheet" href="/views/css/inscription_style.css"/>
 <script src="/asset/JS/inscription.js" defer></script>
+<link rel="stylesheet" href="/views/css/inscription_style.css">
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
 
     <!-- Jeton CSRF : invisible pour l'utilisatrice, revérifié dans traiter_inscription.php -->
@@ -19,24 +21,36 @@ $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situ
     <fieldset class="etape" data-step="1">
         <legend>Créer mon compte</legend>
 
-        <legend>Ajoute une photo de profil</legend>
-        <label for="pictures_user">Photo (facultatif)</label>
-        <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp">
-
-        <label for="account_name">Nom</label>
-        <input type="text" id="account_name" name="account_name" required maxlength="150">
-
-        <label for="account_name">Prénom</label>
-        <input type="text" id="account_name" name="account_name" required maxlength="150">
-
         <label for="account_name">Pseudo</label>
         <input type="text" id="account_name" name="account_name" required maxlength="150">
+
+        <label for="email_user">Email</label>
+        <input type="email" id="email_user" name="email_user" required maxlength="255">
+
+        <label for="password_user">Mot de passe</label>
+        <input type="password" id="password_user" name="password_user" required minlength="8">
+
+        <label for="password_confirmation">Confirmer le mot de passe</label>
+        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8">
 
         <label for="date_birth_user">Date de naissance</label>
         <input type="date" id="date_birth_user" name="date_birth_user" required>
 
-        <label for="genre_sexe_user">Tu es...</label>
-        <!-- <input type="radio" name="genre_sexe_user" value="//<?= $_SESSION['color'] ?? 'neutral' ?>"> -->
+        <legend>Tu es...</legend>
+        <div class="toggle-groupe">
+            <label class="toggle">
+                <input type="radio" name="theme" value="feminin">
+                Une femme
+            </label>
+            <label class="toggle">
+                <input type="radio" name="theme" value="masculin">
+                Un homme
+            </label>
+            <label class="toggle">
+                <input type="radio" name="theme" value="neutre" checked>
+                Neutre / Je préfère ne pas dire
+            </label>
+        </div>
 
         <button type="button" class="fleche-suivant" aria-label="Étape suivante">→</button>
     </fieldset>
@@ -116,17 +130,12 @@ $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situ
     </fieldset>
 
 
-    <!-- ÉTAPE 3 : MDP + Email-->
+    <!-- ÉTAPE 3 : photo de profil-->
     <fieldset class="etape" data-step="3" hidden>
+        <legend>Ajoute une photo de profil</legend>
 
-        <label for="email_user">Email</label>
-        <input type="email" id="email_user" name="email_user" required maxlength="255">
-
-        <label for="password_user">Mot de passe</label>
-        <input type="password" id="password_user" name="password_user" required minlength="8">
-
-        <label for="password_confirmation">Confirmer le mot de passe</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8">
+        <label for="pictures_user">Photo (facultatif)</label>
+        <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp">
 
         <button type="button" class="fleche-retour" aria-label="Étape précédente">←</button>
         <button type="submit" class="bouton-valider">Créer mon compte</button>

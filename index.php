@@ -141,7 +141,7 @@ try {
 
     if (preg_match('#^messages/(\d+)$#', $page, $matches)) {
         $id_contact_message = (int) $matches[1];
-        $page = 'messages/conversation';
+        $page = 'conversation';
     }
 //Pourquoi le tableau ? Pour la maintenanbilité, la factorisation et la lisibilité du code.
     $routes = [

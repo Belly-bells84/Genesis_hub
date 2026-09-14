@@ -9,10 +9,10 @@ a {
 }
 
 :root .neutral {
-  --color_primary:  #2E4A3D;
-  --color_secondary: #5FA88A;
+  --color_primary: #2e4a3d;
+  --color_secondary: #5fa88a;
   --color_tertiary: #fafaf8;
-  --color_quaternary: #C97B4A;
+  --color_quaternary: #c97b4a;
 }
 
 :root .color_women {
@@ -24,9 +24,9 @@ a {
 
 :root .color_men {
   --color_primary: #23518c;
-  --color_secondary: #56688C;
+  --color_secondary: #56688c;
   --color_tertiary: #fafaf8;
-  --color_quaternary: #E8A93B;
+  --color_quaternary: #e8a93b;
 }
 :root {
   /*Typographie primaire & secondaire*/
@@ -73,7 +73,7 @@ header #genesis {
 
 header div #genesis_name {
   font-family: var(--typographie_poppins);
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,16 +81,16 @@ header div #genesis_name {
 
 header div .genesis_devise {
   font-family: var(--typographie_cursive);
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 header .navigation_genesis {
   font-family: var(--typographie_poppins);
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
   display: flex;
   align-items: center;
   justify-self: flex-end;
@@ -102,18 +102,18 @@ header .navigation_genesis {
 }
 
 header nav a {
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
 }
 
 header #search a {
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
 }
 
 /*Style du Main*/
 main {
   display: flex;
   flex-wrap: wrap;
-  min-height: 81.6svh;
+  min-height: calc(100svh - 104px - 24px);
   background-color: var(--color_tertiary);
 }
 #section_1,
@@ -125,7 +125,6 @@ main {
 }
 
 /*Style du Footer*/
-
 .container_footer {
   background-color: var(--color_primary);
   width: 100%;
@@ -135,5 +134,5 @@ main {
 .mention_footer {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_texte);
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
 }

@@ -12,7 +12,7 @@ class User
     public function recupParEmail(string $email): ?array
     {
         $stmt = $this->pdo->prepare('
-            SELECT id, password_user, tentatives_echouees, bloque_jusqu_a
+            SELECT id, password_user, theme, tentatives_echouees, bloque_jusqu_a
             FROM account_user
             WHERE email_user = ?
         ');

@@ -3,8 +3,10 @@ require_once __DIR__ . '/../../config/connexion.php';
 require_once __DIR__ . '/../../config/chiffrement.php';
 require_once __DIR__ . '/../../config/csrf.php';
 require_once __DIR__ . '/../../models/class_user.php';
+require_once __DIR__ . '/../../models/class_referentiel.php';
 $pdo = obtenir_connexion();
 $userRepo = new User($pdo);
+$referentielRepo = new Referentiel($pdo);
 
 $est_propre_profil = ($id_profil_consulte === (int) $_SESSION['user_id']);
 
@@ -20,53 +22,84 @@ if ($est_propre_profil) {
     $phone_en_clair = $profil['phone_user'] !== null ? dechiffrer($profil['phone_user']) : '';
     $city_en_clair = $profil['city_user'] !== null ? dechiffrer($profil['city_user']) : '';
 
-    $corps_armee_liste = $pdo->query('SELECT id_corps_armee, libelle_corps_armee FROM corps_armee')->fetchAll();
-    $sous_corps_liste  = $pdo->query('SELECT id_sous_corps_armee, libelle_sous_corps, id_corps_armee FROM sous_corps_armee')->fetchAll();
-    $situation_liste   = $pdo->query('SELECT id_situation, libelle_situation FROM situation_relationship')->fetchAll();
-    $sous_situation_liste = $pdo->query('SELECT id_sous_situation, libelle_sous_situation, id_situation FROM sous_situation')->fetchAll();
+    $corps_armee_liste = $referentielRepo->recupCorpsArmee();
+    $sous_corps_liste = $referentielRepo->recupSousCorpsArmee();
+    $situation_liste = $referentielRepo->recupSituations();
+    $sous_situation_liste = $referentielRepo->recupSousSituations();
 }
 ?>
 
-<?php if ($est_propre_profil): ?>
+<link rel="stylesheet" href="views/css/profil_style.css">
 
-    <script src="/asset/JS/profil.js" defer></script>
-    <link rel="stylesheet" href="profil_style.css">
-    <form class="wizard-inscription" action="/profil/traiter" method="POST" enctype="multipart/form-data">
+<main class="profil-main">
+
+<?php if ($est_propre_profil): ?>
+<script src="/asset/JS/profil.js" defer></script>
+
+    <form class="wizard-inscription profil-carte" action="/profil/traiter" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
-        <fieldset class="etape">
-            <legend>Mon profil</legend>
+        <fieldset class="etape profil-fieldset">
+            <legend class="profil-legende-cachee">Mon profil</legend>
 
             <?php if (isset($_GET['succes'])): ?>
-                <p class="message-succes">Profil mis à jour.</p>
+                <p class="message-succes profil-message profil-message--succes">Profil mis à jour.</p>
             <?php endif; ?>
 
-            <label for="account_name">Pseudo</label>
-            <input type="text" id="account_name" name="account_name" required maxlength="150"
-                   value="<?= htmlspecialchars($profil['account_name']) ?>">
+            <div class="profil-en-tete">
+                <div class="profil-avatar">
+                    <div class="profil-avatar__cadre">
+                        <?php if ($profil['pictures_user']): ?>
+                            <img class="profil-avatar__img" src="<?= htmlspecialchars($profil['pictures_user']) ?>" alt="Photo de profil de <?= htmlspecialchars($profil['account_name']) ?>">
+                        <?php else: ?>
+                            <span class="profil-avatar__initiale"><?= htmlspecialchars(mb_strtoupper(mb_substr($profil['account_name'], 0, 1))) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <label for="pictures_user" class="profil-avatar__edit" title="Changer la photo de profil">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.4"/></svg>
+                    </label>
+                    <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp" class="profil-avatar__input">
+                </div>
 
-            <label for="desc_name">Bio</label>
-            <input type="text" id="desc_name" name="desc_name" maxlength="1500"
-                   value="<?= htmlspecialchars($profil['desc_name'] ?? '') ?>">
+                <div class="profil-identite">
+                    <label for="account_name" class="profil-champ-libelle">Pseudo</label>
+                    <div class="profil-handle">
+                        <span class="profil-handle__arobase">@</span>
+                        <input type="text" id="account_name" name="account_name" required maxlength="150"
+                               value="<?= htmlspecialchars($profil['account_name']) ?>">
+                    </div>
+                </div>
+            </div>
 
-            <label for="work_user">Métier</label>
-            <input type="text" id="work_user" name="work_user" maxlength="150"
-                   value="<?= htmlspecialchars($profil['work_user'] ?? '') ?>">
+            <div class="profil-bio">
+                <label for="desc_name" class="profil-champ-libelle">Bio</label>
+                <textarea id="desc_name" name="desc_name" maxlength="1500" rows="3"
+                          placeholder="Description / biographie de l'utilisatrice·teur"><?= htmlspecialchars($profil['desc_name'] ?? '') ?></textarea>
+            </div>
 
-            <label for="phone_user">Téléphone</label>
-            <input type="tel" id="phone_user" name="phone_user" maxlength="20"
-                   value="<?= htmlspecialchars($phone_en_clair) ?>">
+            <div class="profil-champs">
+                <div class="champ">
+                    <label for="work_user" class="profil-champ-libelle">Métier</label>
+                    <input type="text" id="work_user" name="work_user" maxlength="150"
+                           value="<?= htmlspecialchars($profil['work_user'] ?? '') ?>">
+                </div>
 
-            <label for="city_user">Ville</label>
-            <input type="text" id="city_user" name="city_user" maxlength="150"
-                   value="<?= htmlspecialchars($city_en_clair) ?>">
+                <div class="champ">
+                    <label for="phone_user" class="profil-champ-libelle">Téléphone</label>
+                    <input type="tel" id="phone_user" name="phone_user" maxlength="20"
+                           value="<?= htmlspecialchars($phone_en_clair) ?>">
+                </div>
 
-            <label for="pictures_user">Nouvelle photo de profil</label>
-            <input type="file" id="pictures_user" name="pictures_user" accept="image/png, image/jpeg, image/webp">
+                <div class="champ">
+                    <label for="city_user" class="profil-champ-libelle">Ville</label>
+                    <input type="text" id="city_user" name="city_user" maxlength="150"
+                           value="<?= htmlspecialchars($city_en_clair) ?>">
+                </div>
+            </div>
         </fieldset>
 
-        <fieldset class="etape">
-            <legend>Corps d'armée</legend>
+        <fieldset class="etape profil-fieldset">
+            <legend class="profil-section-titre">Corps d'armée</legend>
 
             <div class="toggle-groupe">
                 <?php foreach ($corps_armee_liste as $corps): ?>
@@ -97,7 +130,7 @@ if ($est_propre_profil) {
                 </div>
             <?php endforeach; ?>
 
-            <legend>Situation</legend>
+            <legend class="profil-section-titre profil-section-titre--espace">Situation</legend>
 
             <div class="toggle-groupe">
                 <?php foreach ($situation_liste as $situation): ?>
@@ -128,54 +161,81 @@ if ($est_propre_profil) {
                 </div>
             <?php endforeach; ?>
 
-            <label class="toggle">
+            <label class="toggle profil-switch">
                 <input type="checkbox" name="reg_visible" value="1"
                        <?= (int) $profil['reg_visible'] === 1 ? 'checked' : '' ?>>
-                Mon profil est visible par les autres membres
+                <span class="profil-switch__piste" aria-hidden="true"></span>
+                <span class="profil-switch__texte">Mon profil est visible par les autres membres</span>
             </label>
 
-            <button type="submit" class="bouton-valider">Enregistrer</button>
+            <button type="submit" class="bouton-valider profil-bouton">Enregistrer</button>
         </fieldset>
     </form>
 
-    <form class="wizard-inscription" action="/profil/mot-de-passe/traiter" method="POST">
+    <form class="wizard-inscription profil-carte profil-carte--secondaire" action="/profil/mot-de-passe/traiter" method="POST">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generer_jeton_csrf()) ?>">
 
-        <fieldset class="etape">
-            <legend>Changer mon mot de passe</legend>
+        <fieldset class="etape profil-fieldset">
+            <legend class="profil-section-titre">Changer mon mot de passe</legend>
 
             <?php if (isset($_GET['erreur_mdp'])): ?>
-                <p class="message-erreur">Mot de passe actuel incorrect ou nouveaux mots de passe différents.</p>
+                <p class="message-erreur profil-message profil-message--erreur">Mot de passe actuel incorrect ou nouveaux mots de passe différents.</p>
             <?php endif; ?>
 
-            <label for="mot_de_passe_actuel">Mot de passe actuel</label>
-            <input type="password" id="mot_de_passe_actuel" name="mot_de_passe_actuel" required>
+            <div class="profil-champs">
+                <div class="champ">
+                    <label for="mot_de_passe_actuel" class="profil-champ-libelle">Mot de passe actuel</label>
+                    <input type="password" id="mot_de_passe_actuel" name="mot_de_passe_actuel" required>
+                </div>
 
-            <label for="nouveau_mot_de_passe">Nouveau mot de passe</label>
-            <input type="password" id="nouveau_mot_de_passe" name="nouveau_mot_de_passe" required minlength="8">
+                <div class="champ">
+                    <label for="nouveau_mot_de_passe" class="profil-champ-libelle">Nouveau mot de passe</label>
+                    <input type="password" id="nouveau_mot_de_passe" name="nouveau_mot_de_passe" required minlength="8">
+                </div>
 
-            <label for="nouveau_mot_de_passe_confirmation">Confirmer le nouveau mot de passe</label>
-            <input type="password" id="nouveau_mot_de_passe_confirmation" name="nouveau_mot_de_passe_confirmation" required minlength="8">
+                <div class="champ">
+                    <label for="nouveau_mot_de_passe_confirmation" class="profil-champ-libelle">Confirmer le nouveau mot de passe</label>
+                    <input type="password" id="nouveau_mot_de_passe_confirmation" name="nouveau_mot_de_passe_confirmation" required minlength="8">
+                </div>
+            </div>
 
-            <button type="submit" class="bouton-valider">Changer le mot de passe</button>
+            <button type="submit" class="bouton-valider profil-bouton profil-bouton--discret">Changer le mot de passe</button>
         </fieldset>
     </form>
 
 <?php else: ?>
 
-    <article class="profil-public">
-        <?php if ($profil['pictures_user']): ?>
-            <img src="<?= htmlspecialchars($profil['pictures_user']) ?>" alt="Photo de profil de <?= htmlspecialchars($profil['account_name']) ?>">
-        <?php endif; ?>
+    <article class="profil-public profil-carte">
+        <div class="profil-en-tete">
+            <div class="profil-avatar">
+                <div class="profil-avatar__cadre">
+                    <?php if ($profil['pictures_user']): ?>
+                        <img class="profil-avatar__img" src="<?= htmlspecialchars($profil['pictures_user']) ?>" alt="Photo de profil de <?= htmlspecialchars($profil['account_name']) ?>">
+                    <?php else: ?>
+                        <span class="profil-avatar__initiale"><?= htmlspecialchars(mb_strtoupper(mb_substr($profil['account_name'], 0, 1))) ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
 
-        <h1><?= htmlspecialchars($profil['account_name']) ?></h1>
+            <div class="profil-identite">
+                <h1 class="profil-handle profil-handle--statique">
+                    <span class="profil-handle__arobase">@</span><?= htmlspecialchars($profil['account_name']) ?>
+                </h1>
+            </div>
+        </div>
 
         <?php if ($profil['desc_name']): ?>
-            <p><?= htmlspecialchars($profil['desc_name']) ?></p>
+            <p class="profil-bio profil-bio--statique"><?= htmlspecialchars($profil['desc_name']) ?></p>
         <?php endif; ?>
 
-        <p><?= htmlspecialchars($profil['libelle_corps_armee']) ?><?= $profil['libelle_sous_corps'] ? ' — ' . htmlspecialchars($profil['libelle_sous_corps']) : '' ?></p>
-        <p><?= htmlspecialchars($profil['libelle_situation']) ?></p>
+        <div class="profil-tags">
+            <span class="profil-tag">
+                <?= htmlspecialchars($profil['libelle_corps_armee']) ?><?= $profil['libelle_sous_corps'] ? ' — ' . htmlspecialchars($profil['libelle_sous_corps']) : '' ?>
+            </span>
+            <span class="profil-tag"><?= htmlspecialchars($profil['libelle_situation']) ?></span>
+        </div>
     </article>
 
 <?php endif; ?>
+
+</main>

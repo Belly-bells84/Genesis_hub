@@ -1,0 +1,161 @@
+/* conversation_style.css
+   Spécifique à page_conversation.php. Le CSS du sidebar est dans
+   messages_common.css (à charger AVANT ce fichier).
+
+   Utilise les variables de thème du site (--color_primary / --color_secondary /
+   --color_tertiary / --color_quaternary) pour s'adapter automatiquement au
+   thème actif (.neutral / .color_women / .color_men sur <body>).
+*/
+
+.conversation-page {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color_tertiary);
+}
+
+/* Le nom du contact fait office de barre de titre en haut du panneau.
+   Aucune image de profil n'existe encore dans le markup : l'avatar est
+   un ::before générique, sur le même principe que le sidebar. */
+.conversation-page h1 {
+  margin: 0;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color_primary);
+  color: var(--color_tertiary);
+  font-size: var(--taille_h3);
+  font-weight: 600;
+}
+
+.conversation-page h1::before {
+  content: "";
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--color_secondary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Fil de messages ---------- */
+
+.fil-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--color_tertiary);
+}
+
+.message {
+  max-width: 60%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  font-size: 0.92rem;
+  word-wrap: break-word;
+}
+
+.message-date {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.message-recu {
+  align-self: flex-start;
+  background: color-mix(in srgb, var(--color_secondary) 10%, var(--color_tertiary));
+  color: #2a2a28;
+  border: 1px solid color-mix(in srgb, var(--color_primary) 15%, transparent);
+  border-bottom-left-radius: 4px;
+}
+
+.message-envoye {
+  align-self: flex-end;
+  background: var(--color_secondary);
+  color: var(--color_tertiary);
+  border-bottom-right-radius: 4px;
+}
+
+.message-envoye .message-date {
+  text-align: right;
+}
+
+/* ---------- Formulaire d'envoi ---------- */
+
+.form-envoi-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--color_tertiary);
+  border-top: 1px solid color-mix(in srgb, var(--color_primary) 15%, transparent);
+}
+
+.form-envoi-message input[type="text"] {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color_secondary) 12%, var(--color_tertiary));
+  font-size: 0.9rem;
+  color: #2a2a28;
+}
+
+.form-envoi-message input[type="text"]::placeholder {
+  color: color-mix(in srgb, var(--color_primary) 55%, transparent);
+}
+
+.form-envoi-message input[type="text"]:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color_secondary);
+}
+
+.form-envoi-message button {
+  flex-shrink: 0;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--color_secondary);
+  color: var(--color_tertiary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.form-envoi-message button::after {
+  content: " →";
+}
+
+.form-envoi-message button:hover {
+  background: var(--color_primary);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+  .fil-messages {
+    padding: 16px;
+  }
+
+  .message {
+    max-width: 80%;
+  }
+
+  .form-envoi-message {
+    padding: 12px 16px;
+  }
+}

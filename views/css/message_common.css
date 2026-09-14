@@ -1,0 +1,229 @@
+/* messages_common.css
+   Chargé par page_message.php ET page_conversation.php, AVANT leur CSS
+   spécifique. Contient tout ce qui doit être identique sur les deux pages
+   (le sidebar), pour éviter la duplication et les divergences visuelles.
+
+   Utilise les variables de thème définies dans style.css
+   (--color_primary / --color_secondary / --color_tertiary / --color_quaternary,
+   selon la classe .neutral / .color_women / .color_men posée sur <body>) :
+   la messagerie s'adapte donc automatiquement à la couleur de chaque
+   utilisatrice, au lieu d'imposer une palette fixe.
+*/
+
+/* Centre .messages-layout dans <main> (déjà display:flex dans style.css),
+   horizontalement ET verticalement, sans toucher au style global de <main>
+   qui est aussi utilisé par d'autres pages (feed, etc.). */
+main:has(.messages-layout) {
+  justify-content: center;
+  align-items: center;
+}
+
+.messages-layout {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  height: calc(100svh - 104px - 24px - 40px);
+  background: var(--color_tertiary);
+  font-family: var(--typographie_poppins);
+}
+
+/* ---------- Sidebar ---------- */
+
+.messages-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--color_secondary) 12%, var(--color_tertiary));
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.messages-recherche {
+  position: relative;
+  padding: 20px 16px 12px;
+}
+
+.messages-recherche input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color_tertiary);
+  font-size: var(--taille_texte);
+  color: var(--color_primary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color_primary) 20%, transparent);
+}
+
+.messages-recherche input::placeholder {
+  color: color-mix(in srgb, var(--color_primary) 55%, transparent);
+}
+
+.messages-recherche input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color_secondary);
+}
+
+.resultats-recherche {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 100%;
+  z-index: 5;
+  margin: 4px 0 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--color_tertiary);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.resultats-recherche:empty {
+  display: none;
+}
+
+.resultats-recherche li {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color_primary);
+}
+
+.resultats-recherche li:hover {
+  background: color-mix(in srgb, var(--color_secondary) 15%, transparent);
+}
+
+.liste-conversations {
+  list-style: none;
+  margin: 0;
+  padding: 4px 12px 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.liste-conversations > p {
+  padding: 24px 12px;
+  color: color-mix(in srgb, var(--color_primary) 55%, transparent);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.conversation-apercu {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background: var(--color_tertiary);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+/* Avatar générique en CSS pur : aucune balise <img> n'existe encore dans
+   message_sidebar.php. Le jour où une photo de profil est ajoutée,
+   remplace ce ::before par une vraie <img class="conversation-avatar">. */
+.conversation-apercu a {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.conversation-apercu a::before {
+  content: "";
+  grid-row: span 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color_secondary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+}
+
+.conversation-nom {
+  grid-column: 2;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color_primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-dernier-message {
+  grid-column: 2;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--color_primary) 60%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge-non-lu {
+  grid-column: 3;
+  grid-row: span 2;
+  align-self: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color_quaternary);
+  color: #2a2a28;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fond en accent (quaternaire) pour les conversations non lues : le
+   texte reste dans une teinte sombre fixe (#2a2a28), car la couleur
+   quaternaire est claire sur certains thèmes (ex. rose sur color_women)
+   et foncée sur d'autres — un texte blanc fixe ne serait pas toujours lisible. */
+.conversation-apercu.non-lu {
+  background: var(--color_quaternary);
+}
+
+.conversation-apercu.non-lu .conversation-nom,
+.conversation-apercu.non-lu .conversation-dernier-message {
+  color: #2a2a28;
+}
+
+.conversation-apercu.non-lu .badge-non-lu {
+  background: #2a2a28;
+  color: var(--color_quaternary);
+}
+
+.conversation-apercu.conversation-active {
+  background: var(--color_primary);
+}
+
+.conversation-apercu.conversation-active .conversation-nom,
+.conversation-apercu.conversation-active .conversation-dernier-message {
+  color: var(--color_tertiary);
+}
+
+.conversation-apercu a:hover {
+  transform: translateX(2px);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+  .messages-layout {
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+
+  .messages-sidebar {
+    width: 100%;
+    max-height: 320px;
+  }
+}

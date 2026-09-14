@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos&display=swap" rel="stylesheet">
 <!--CSS-->
-    <link rel="stylesheet" href="views/css/style.css"/>
+    <link rel="stylesheet" href="/views/css/style.css"/>
 <!--Sentry JS--->
     <script src="https://js-de.sentry-cdn.com/11c97357c696b3c26ef5c86b25d1c547.min.js" crossorigin="anonymous"></script>
 <!--JS-->
@@ -23,7 +23,7 @@
     <?php $lien_accueil = utilisateur_connecte() ? '/feed' : '/'; ?>
     <header>
             <a href="<?= $lien_accueil ?>" id="logo">
-            <img src="/views/asset/IMG/Genesis.png" alt="Logo du réseau social GENESIS"></a>
+            <img src="/views/asset/IMG/logo_clair.svg" alt="Logo du réseau social GENESIS"></a>
         <div id="genesis">
             <a href="<?= $lien_accueil ?>">
             <span id="genesis_name">The GENESIS</span>

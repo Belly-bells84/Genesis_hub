@@ -24,6 +24,7 @@ $dernier_id = !empty($messages) ? (int) end($messages)['id_message_private'] : 0
 
 
 <script src="/views/js/message.js" defer></script>
+<link rel="stylesheet" href="/views/css/message_common.css">
 <link rel="stylesheet" href="/views/css/conversation_style.css">
 
 <div class="messages-layout">

@@ -1,10 +1,12 @@
 .container_section {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 #presentation_fondatrice {
   width: 90%;
   display: flex;
-  align-content: flex-start;
+  align-content: center;
   flex-wrap: wrap;
   gap: 1rem;
   margin: 10px;
@@ -28,7 +30,7 @@
 
 #presentation_fondatrice .contenu h1 {
   font-family: var(--typographie_poppins);
-  color: var(----color_primary);
+  color: var(--color_secondary);
   font-size: 1.3rem;
   line-height: 1.25;
   gap: 1rem;
@@ -43,8 +45,8 @@
 #presentation_fondatrice a {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_texte);
-  color: var(--color_secondary);
-  background-color: var(----color_primary);
+  color: var(--color_tertiary);
+  background-color: var(--color_primary);
   border-radius: 5px;
   padding: 5px;
 
@@ -53,7 +55,7 @@
   right: -18rem;
 }
 
-/*Section des valeurs de l'entreprise*/
+/* Section des valeurs de l'entreprise
 .contenu_valeur {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_h3);
@@ -71,33 +73,40 @@
 
 .valeur:hover {
   width: 105px;
-}
+} */
 
 /*Section des derniers articles*/
-.section_2 h2 {
-  font-family: var(--typographie_poppins);
-  font-size: var(--taille_h2);
-  color: var(----color_primary);
+.section_2 > div {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-
-.section_2 h3 {
+/* .section_2 h2 {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_h3);
-  color: var(----color_primary);
+  color: var(--color_secondary);
+} */
+
+/* .section_2 h3 {
+  font-family: var(--typographie_poppins);
+  font-size: var(--taille_texte);
+  color: var(--color_secondary);
 }
 
 .section_2 p {
   font-family: var(--typographie_poppins);
-  font-size: var(--taille_h3);
-  color: var(----color_primary);
-}
+  font-size: var(--taille_texte);
+  color: var(--color_secondary);
+} */
 
 .art_img {
-  width: 70px;
+  /* width: 140px; */
+  height: 250px;
+  /* object-fit: cover; */
   border-radius: 15px;
 }
 
-art_img:hover {
-  width: 75px;
-  border-radius: 5px;
+.art_img:hover {
+  height: 265px;
+  border-radius: 25px;
 }

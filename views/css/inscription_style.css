@@ -110,7 +110,7 @@
 .fleche-suivant,
 .bouton-valider {
   background-color: var(--color_primary);
-  color: var(--color_secondary);
+  color: var(--color_tertiary);
   align-self: flex-end;
 }
 
@@ -210,6 +210,10 @@
 
 .apercu-photo img.visible {
   display: block;
+}
+
+.profil-main [hidden] {
+    display: none !important;
 }
 
 /* États et accessibilité, non prévus dans style.css */

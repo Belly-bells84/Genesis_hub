@@ -9,8 +9,9 @@ $messageRepo = new MessagePrivate($pdo);
 $id_utilisateur = (int) $_SESSION['user_id'];
 ?>
 
-<script src="/views/js/message.js" defer></script>
-<link rel="stylesheet" href="/views/css/message_style.css">
+<script src="views/js/message.js" defer></script>
+<link rel="stylesheet" href="views/css/message_common.css">
+<link rel="stylesheet" href="views/css/message_style.css">
 
 <div class="messages-layout">
     <?php require __DIR__ . '/partials/message_sidebar.php'; ?>
