@@ -19,3 +19,22 @@
   font-size: var(--taille_texte);
   line-height: 1.5;
 }
+/* ---------- Responsive : tablette ---------- */
+ 
+@media (max-width: 1024px) {
+  .messages-panel-vide {
+    padding: 32px;
+  }
+}
+ 
+/* ---------- Responsive : mobile ---------- */
+/* Sur mobile, .messages-panel-vide est masqué par message_common.css
+   (page_message.php affiche uniquement la liste des conversations en
+   plein écran) ; cette règle ne s'applique donc que si jamais elle
+   redevenait visible (ex. avant chargement du CSS commun). */
+ 
+@media (max-width: 720px) {
+  .messages-panel-vide {
+    padding: 24px;
+  }
+}

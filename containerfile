@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Extensions PHP nécessaires :
 # - pdo_mysql   : connexion à la base (PDO utilisé partout dans le projet)

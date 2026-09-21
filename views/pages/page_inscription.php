@@ -10,7 +10,7 @@ $sous_corps_liste = $referentielRepo->recupSousCorpsArmee();
 $situation_liste = $referentielRepo->recupSituations();
 $sous_situation_liste = $referentielRepo->recupSousSituations();
 ?>
-<script src="/asset/JS/inscription.js" defer></script>
+<script src="/views/JS/inscription.js" defer></script>
 <link rel="stylesheet" href="/views/css/inscription_style.css">
 <form id="form-inscription" class="wizard-inscription" action="/inscription/traiter" method="POST" enctype="multipart/form-data">
 
@@ -24,16 +24,16 @@ $sous_situation_liste = $referentielRepo->recupSousSituations();
         <label for="account_name">Pseudo</label>
         <input type="text" id="account_name" name="account_name" required maxlength="150">
 
-        <label for="email_user">Email</label>
+        <label for="email_user">Email *</label>
         <input type="email" id="email_user" name="email_user" required maxlength="255">
 
-        <label for="password_user">Mot de passe</label>
-        <input type="password" id="password_user" name="password_user" required minlength="8">
+        <label for="password_user">Mot de passe *</label>
+        <input type="password" id="password_user" name="password_user" required minlength="12">
 
-        <label for="password_confirmation">Confirmer le mot de passe</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8">
+        <label for="password_confirmation">Confirmer le mot de passe *</label>
+        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="12">
 
-        <label for="date_birth_user">Date de naissance</label>
+        <label for="date_birth_user">Date de naissance *</label>
         <input type="date" id="date_birth_user" name="date_birth_user" required>
 
         <legend>Tu es...</legend>

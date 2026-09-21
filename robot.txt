@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /feed
+Disallow: /profil
+Disallow: /messages
+Disallow: /connexion/traiter
+Disallow: /inscription/traiter
+Disallow: /deconnexion
+Disallow: /asset/IMG/uploads
+
+Sitemap: https://genesis.local/sitemap.xml

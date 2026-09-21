@@ -28,6 +28,7 @@
   color: var(--color_tertiary);
   font-size: var(--taille_h3);
   font-weight: 600;
+  border-radius: 10px;
 }
 
 .conversation-page h1::before {
@@ -157,5 +158,52 @@
 
   .form-envoi-message {
     padding: 12px 16px;
+  }
+}
+
+/* ---------- Responsive : tablette ---------- */
+ 
+@media (max-width: 1024px) {
+  .message {
+    max-width: 70%;
+  }
+}
+
+/* ---------- Responsive : mobile ---------- */
+/* Sur mobile, .conversation-page occupe tout l'écran (la sidebar est
+   masquée par message_common.css) : on resserre les espacements et on
+   réduit un peu l'en-tête / l'avatar pour un rendu plus "app native",
+   proche de la maquette. */
+ 
+@media (max-width: 720px) {
+  .conversation-page h1 {
+    padding: 12px 16px;
+    gap: 10px;
+    font-size: var(--taille_texte);
+  }
+ 
+  .conversation-page h1::before {
+    width: 36px;
+    height: 36px;
+  }
+ 
+  .fil-messages {
+    padding: 16px;
+  }
+ 
+  .message {
+    max-width: 80%;
+  }
+ 
+  .form-envoi-message {
+    padding: 12px 16px;
+  }
+ 
+  .form-envoi-message input[type="text"] {
+    padding: 10px 16px;
+  }
+ 
+  .form-envoi-message button {
+    padding: 10px 18px;
   }
 }

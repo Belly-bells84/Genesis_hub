@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+/* .etape et .toggle-groupe définissent display:flex — sans ce ciblage
+   précis, l'attribut hidden posé par le JS n'aurait aucun effet visuel
+   sur ces éléments (une règle d'auteur l'emporte toujours sur le style
+   par défaut du navigateur pour [hidden], même à spécificité égale).
+   Combiner la classe et l'attribut donne une spécificité plus élevée
+   que ".etape"/".toggle-groupe" seuls, donc pas besoin de !important. */
+.etape[hidden],
+.toggle-groupe[hidden] {
+  display: none;
+}
+
 a {
   text-decoration: none;
 }
@@ -135,4 +146,69 @@ main {
   font-family: var(--typographie_poppins);
   font-size: var(--taille_texte);
   color: var(--color_tertiary);
+}
+
+/* ---------- Responsive : header ---------- */
+
+/* Tablette ET mobile (≤1024px) : On repasse donc le header en colonne : logo, puis titre, puis
+   nav (elle aussi en colonne), chacun centré et dans le flux normal (plus
+   de position:absolute ni de transform) — ça élimine le chevauchement
+   quelle que soit la largeur d'écran en dessous de 1024px.
+   Comme le header devient plus haut, --header_height est réévalué pour
+   que .main et la messagerie gardent une hauteur correcte. */
+   
+@media (max-width: 1024px) {
+  :root {
+    --header_height: 250px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 6px;
+  }
+
+  header #logo {
+    width: 80px;
+  }
+
+  header #genesis {
+    position: static;
+    transform: none;
+  }
+
+  header div .genesis_devise {
+    font-size: 1.1rem;
+  }
+
+  header .navigation_genesis {
+    position: static;
+    transform: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile (≤720px) : même disposition en colonne, tailles encore réduites
+   pour les petits écrans. */
+@media (max-width: 720px) {
+  header #logo {
+    width: 64px;
+  }
+
+  header div #genesis_name {
+    font-size: 0.85rem;
+  }
+
+  header div .genesis_devise {
+    font-size: 1rem;
+  }
+
+  header .navigation_genesis {
+    font-size: 0.85rem;
+  }
 }

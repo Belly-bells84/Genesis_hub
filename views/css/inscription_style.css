@@ -232,3 +232,44 @@
     margin: 1rem;
   }
 }
+
+/* ---------- Responsive ---------- */
+/* .wizard-inscription est déjà pensé pour être fluide : colonne unique,
+   max-width 500px centrée (margin auto). Sur PC ça ne bouge pas. Sur
+   tablette/mobile on ajoute juste une marge intérieure pour que le
+   formulaire ne touche pas les bords, et on resserre certaines tailles.
+   Paliers alignés sur le reste du site (1024px / 720px). */
+
+@media (max-width: 1024px) {
+  .wizard-inscription {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .wizard-inscription {
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+  }
+
+  .etape legend {
+    font-size: var(--taille_h3);
+  }
+
+  .toggle {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  .fleche-suivant,
+  .fleche-retour,
+  .bouton-valider {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .apercu-photo img {
+    width: 60px;
+    height: 60px;
+  }
+}

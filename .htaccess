@@ -1,6 +1,36 @@
 RewriteEngine On
 
+RewriteRule ^config/ - [F,L]
+RewriteRule ^controller/ - [F,L]
+RewriteRule ^database/ - [F,L]
+RewriteRule ^exceptions/ - [F,L]
+RewriteRule ^init-db/ - [F,L]
+RewriteRule ^init-db-prod/ - [F,L]
+RewriteRule ^models/ - [F,L]
+RewriteRule ^node_module/ - [F,L]
+RewriteRule ^tests/ - [F,L]
+RewriteRule ^test-js/- [F,L]
+RewriteRule ^uploads/ - [F,L]
+RewriteRule ^vendor/ - [F,L]
+
+RewriteRule ^apache-vhost\.conf$ - [F,L]
+RewriteRule ^compose\.yaml$ - [F,L]
+RewriteRule ^composer\.json$ - [F,L]
+RewriteRule ^composer\.lock$ - [F,L]
+RewriteRule ^containerfile$ - [F,L]
+RewriteRule ^package-lock\.json$ - [F,L]
+RewriteRule ^package$ - [F,L]
+RewriteRule ^phpunit\.xml$ - [F,L]
+
+RewriteRule ^\.env$ - [F,L]
+RewriteRule ^\.env.dev$ - [F,L]
+RewriteRule ^\.env.prod$ - [F,L]
+RewriteRule ^\.env.example$ - [F,L]
+RewriteRule ^\.gitignore$ - [F,L]
+RewriteRule ^\.phpunit.result.cache$ - [F,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+

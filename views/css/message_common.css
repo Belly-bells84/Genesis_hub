@@ -213,17 +213,63 @@ main:has(.messages-layout) {
   transform: translateX(2px);
 }
 
-/* ---------- Responsive ---------- */
-
+/* ---------- Responsive : tablette ---------- */
+/* iPad / petits écrans PC : le layout reste sidebar + contenu côte à côte,
+   on ajuste juste les largeurs pour que ça respire moins et tienne sans
+   scroll horizontal. */
+ 
+@media (max-width: 1024px) {
+  .messages-layout {
+    max-width: 100%;
+    height: calc(100svh - var(--header_height) - 24px - 24px);
+  }
+ 
+  .messages-sidebar {
+    width: 240px;
+  }
+}
+ 
+/* ---------- Responsive : mobile ---------- */
+/* En dessous de 720px, la messagerie suit la maquette mobile : un seul
+   panneau plein écran à la fois (liste des conversations OU conversation
+   ouverte), jamais les deux empilés.
+ 
+   On distingue les deux pages en CSS pur avec :has(), sans toucher au
+   PHP/JS : page_message.php contient toujours .messages-panel-vide,
+   page_conversation.php contient toujours .conversation-page. */
+ 
 @media (max-width: 720px) {
+  main:has(.messages-layout) {
+    align-items: stretch;
+  }
+ 
   .messages-layout {
     flex-direction: column;
-    height: auto;
-    gap: 12px;
+    gap: 0;
+    width: 100%;
+    height: calc(100svh - var(--header_height));
+    border-radius: 0;
+    box-shadow: none;
   }
-
+ 
   .messages-sidebar {
     width: 100%;
-    max-height: 320px;
+    max-height: none;
+    flex: 1;
+    border-radius: 0;
+    box-shadow: none;
+  }
+ 
+  /* Conversation ouverte : on masque la liste, la conversation prend
+     tout l'écran. */
+  .messages-layout:has(.conversation-page) .messages-sidebar {
+    display: none;
+  }
+ 
+  /* Aucune conversation ouverte : on masque le panneau "vide", la liste
+     des conversations prend tout l'écran (= écran "Repertory" de la
+     maquette). */
+  .messages-layout:has(.messages-panel-vide) .messages-panel-vide {
+    display: none;
   }
 }

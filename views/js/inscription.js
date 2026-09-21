@@ -15,10 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!etapeCourante.checkValidity()) {
                 etapeCourante.reportValidity();
-                return;
-            }
-
-            afficherEtape(etapeActuelle + 1);
+            } else afficherEtape(etapeActuelle + 1);
         });
     });
 
